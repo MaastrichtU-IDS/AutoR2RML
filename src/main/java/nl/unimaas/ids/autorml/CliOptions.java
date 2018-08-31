@@ -2,7 +2,6 @@ package nl.unimaas.ids.autorml;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
 
 @Command(name = "autodrill")
 public class CliOptions {
@@ -27,5 +26,11 @@ public class CliOptions {
 	
 	@Option(names= {"-d", "--directory"}, description = "Base directory to scan for structured files with Apache Drill. Needs to be under the dir scanned by Apache Drill running (/data by default)")
 	String baseDir;
+	
+	@Option(names = {"-g", "--graph"}, description = "URL of the Graph the nquads will belong to. If empty, it will be generated." )
+	String outputGraph = null;
+	
+	@Option(names= {"-b", "--baseUri"}, description = "Base URI used to built the dataset URIs. Default: http://kraken/")
+	String baseUri = "http://kraken/";
 
 }

@@ -4,12 +4,12 @@ import java.sql.SQLException;
 
 public class MapperFactory {
 	
-	public static MapperInterface getMapper(String jdbcUrl, String userName, String passWord) throws SQLException, ClassNotFoundException {
+	public static MapperInterface getMapper(String jdbcUrl, String username, String password, String outputGraph, String baseUri) throws SQLException, ClassNotFoundException {
 		MapperInterface ret;
 		if(jdbcUrl.startsWith("jdbc:drill:")) {
-			ret = new DrillMapper(jdbcUrl, userName, passWord);
+			ret = new DrillMapper(jdbcUrl, username, password, outputGraph, baseUri);
 		} else {
-			ret = new RDBMSMapper(jdbcUrl, userName, passWord);
+			ret = new RDBMSMapper(jdbcUrl, username, password, outputGraph, baseUri);
 		}
 		return ret;
 	}

@@ -28,6 +28,9 @@ docker run -it --rm --link drill:drill autorml -j "jdbc:drill:drillbit=drill:310
 
 # Mappings to a file
 docker run -it --rm --link drill:drill -v /data:/data autorml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -r
+
+# With defined base URI and output Graph URI
+docker run -it --rm --link drill:drill -v /data:/data autorml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -g http://kraken/graph/pharmgkb_drugs -b http://kraken.org/ -r
 ```
 
 #### Using RDBMS
@@ -52,20 +55,25 @@ jdbc:postgresql://localhost:5432/database
 ### Options
 
 ```shell
-autodrill [-?r] [-d=<baseDir>] -j=<jdbcurl> [-o=<outputFilepath>]
-                 [-p=<password>] [-u=<username>]
-  -j, --jdbcurl=<jdbcurl>   Required. The URL for the Jdbc connector. E.g.: jdbc:drill:
-                              drillbit=localhost:31010
+autodrill [-?r] [-b=<baseUri>] [-d=<baseDir>] [-g=<outputGraph>]
+                 -j=<jdbcurl> [-o=<outputFilepath>] [-p=<password>]
+                 [-u=<username>]
   -?, --help                Display a help message
+  -b, --baseUri=<baseUri>   Base URI used to built the dataset URIs. Default: http:
+                              //kraken/
   -d, --directory=<baseDir> Base directory to scan for structured files with Apache
                               Drill. Needs to be under the dir scanned by Apache
                               Drill running (/data by default)
+  -g, --graph=<outputGraph> URL of the Graph the nquads will belong to. If empty, it
+                              will be generated.
+  -j, --jdbcurl=<jdbcurl>   Required. The URL for the Jdbc connector. E.g.: jdbc:
+                              drill:drillbit=localhost:31010
   -o, --outputfile=<outputFilepath>
                             Path to the file where the mappings will be stored. If
                               empty, then mappings go to System.out
-  -u, --username=<username> Username for database login, if needed
   -p, --password=<password> Password for database username, if needed.
   -r, --recursive           Process subDirectories recursively
+  -u, --username=<username> Username for database login, if needed
 ```
 ### IDE run config
 

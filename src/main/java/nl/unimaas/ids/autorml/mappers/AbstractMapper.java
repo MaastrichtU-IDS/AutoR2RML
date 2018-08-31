@@ -16,6 +16,8 @@ public abstract class AbstractMapper implements MapperInterface {
 	final static List<String> acceptedTsvFileTypes = Arrays.asList(new String[] { "csv", "tsv", "psv" });
 	
 	Connection connection;
+	String outputGraph;
+	String baseUri;
 	
 	public AbstractMapper() {
 		// TODO Auto-generated constructor stub
@@ -42,7 +44,8 @@ public abstract class AbstractMapper implements MapperInterface {
 
 		lower.println("rr:subjectMap [");
 		lower.println("  rr:termType rr:IRI;");
-		lower.println("  rr:template \"http://kraken" + table + "/{" + ROW_NUM_NAME + "}\";");
+		lower.println("  rr:template \"" + this.baseUri + table + "/{" + ROW_NUM_NAME + "}\";");
+		lower.println("  rr:graph <" + this.outputGraph + ">;");
 		lower.println("];");
 
 		upper.println("  select row_number() over (partition by filename) as " + ROW_NUM_NAME);
@@ -53,8 +56,9 @@ public abstract class AbstractMapper implements MapperInterface {
 			upper.println("    , columns[" + i + "] as `" + columnName + "`");
 
 			lower.println("rr:predicateObjectMap [");
-			lower.println("  rr:predicate http://kraken" + table + "/has" + columnName + ";");
+			lower.println("  rr:predicate " + this.baseUri + table + "/" + columnName + ";");
 			lower.println("  rr:objectMap [ rr:column \"" + columnName + "\" ];");
+			lower.println("  rr:graph <" + this.outputGraph + ">;");
 			lower.println("];");
 		}
 		upper.println("  from\n    " + table + ";");

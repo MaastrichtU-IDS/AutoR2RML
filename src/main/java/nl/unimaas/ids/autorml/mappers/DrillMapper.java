@@ -14,12 +14,17 @@ import java.util.List;
 import nl.unimaas.ids.util.PrefixPrintWriter;
 
 public class DrillMapper extends AbstractMapper implements MapperInterface {
-	Connection connection;
+	//Connection connection;
 
-	public DrillMapper(String jdbcUrl, String userName, String passWord) throws SQLException, ClassNotFoundException {
+	public DrillMapper(String jdbcUrl, String username, String password, String outputGraph, String baseUri) throws SQLException, ClassNotFoundException {
 		// TODO: Class.forName should not be necessary any more
 		Class.forName("org.apache.drill.jdbc.Driver"); 
-		connection = DriverManager.getConnection(jdbcUrl, userName, passWord);
+		connection = DriverManager.getConnection(jdbcUrl, username, password);
+		if (this.outputGraph == null)
+			this.outputGraph = "http://kraken/graph/default";
+		else
+			this.outputGraph = outputGraph;
+		this.baseUri = baseUri;
 	}
 
 

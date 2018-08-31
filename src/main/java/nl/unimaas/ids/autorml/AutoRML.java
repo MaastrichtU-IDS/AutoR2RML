@@ -3,8 +3,6 @@ package nl.unimaas.ids.autorml;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.List;
 
 import nl.unimaas.ids.autorml.mappers.MapperFactory;
 import nl.unimaas.ids.autorml.mappers.MapperInterface;
@@ -18,7 +16,7 @@ public class AutoRML {
 			if(cli.help) 
 				printUsageAndExit();
 		
-			MapperInterface mapper = MapperFactory.getMapper(cli.jdbcurl, cli.username, cli.password);
+			MapperInterface mapper = MapperFactory.getMapper(cli.jdbcurl, cli.username, cli.password, cli.outputGraph, cli.baseUri);
 			
 			PrintStream ps = System.out;
 			if(cli.outputFilepath!=null) {
