@@ -39,13 +39,13 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 			String[] columns = getColumnNames(filePath);
 			printFirstFiveLines(filePath, ps);
 			
-			String table = "dfs.root.`" + filePath + "`";
+			String fromQuery = "dfs.root.`" + filePath + "`";
 			
-			generateR2RML(table, columns, ps, ("Mapping" + count++));
+			generateR2RML(filePath, fromQuery, columns, ps, ("Mapping" + count++));
 			
 			for(int i=0; i<columns.length; i++) 
 				columns[i] = "Column" + (i+1);
-			generateR2RML(table, columns, ps, ("Mapping" + count++), "# ");
+			generateR2RML(filePath, fromQuery, columns, ps, ("Mapping" + count++), "# ");
 		}
 
 	}

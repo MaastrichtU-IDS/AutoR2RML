@@ -31,6 +31,7 @@ public abstract class AbstractMapper implements MapperInterface {
 	
 	@SuppressWarnings("resource")
 	void generateImportAndGraph(PrintStream ps, String baseDir) {
+		this.baseUri = this.baseUri.replaceAll("/$", "");
 		if (this.outputGraph == null) {
 			this.outputGraph = this.baseUri + "/graph" + baseDir;
 		}
@@ -41,12 +42,12 @@ public abstract class AbstractMapper implements MapperInterface {
 	}
 	
 	// TODO: should we put generateR2RML in the MapperInterface?
-	void generateR2RML(String table, String[] columns, PrintStream ps, String label) throws Exception {
-		generateR2RML(table, columns, ps, label, null);
+	void generateR2RML(String table, String fromQuery, String[] columns, PrintStream ps, String label) throws Exception {
+		generateR2RML(table, fromQuery, columns, ps, label, null);
 	}
 	
 	@SuppressWarnings("resource")
-	void generateR2RML(String table, String[] columns, PrintStream ps, String label, String prefix) throws Exception {
+	void generateR2RML(String uriPath, String fromQuery, String[] columns, PrintStream ps, String label, String prefix) throws Exception {
 		PrintWriter upper = new PrefixPrintWriter(ps, prefix);
 		PrintWriter lower = new PrefixPrintWriter(ps, prefix);
 
@@ -56,7 +57,7 @@ public abstract class AbstractMapper implements MapperInterface {
 
 		lower.println("rr:subjectMap [");
 		lower.println("  rr:termType rr:IRI;");
-		lower.println("  rr:template \"" + this.baseUri + table + "/{" + ROW_NUM_NAME + "}\";");
+		lower.println("  rr:template \"" + this.baseUri + uriPath + "/{" + ROW_NUM_NAME + "}\";");
 		lower.println("  rr:graph <" + this.outputGraph + ">;");
 		lower.println("];");
 
@@ -68,12 +69,12 @@ public abstract class AbstractMapper implements MapperInterface {
 			upper.println("    , columns[" + i + "] as `" + columnName + "`");
 
 			lower.println("rr:predicateObjectMap [");
-			lower.println("  rr:predicate " + this.baseUri + table + "/" + columnName + ";");
+			lower.println("  rr:predicate " + this.baseUri + uriPath + "/" + columnName + ";");
 			lower.println("  rr:objectMap [ rr:column \"" + columnName + "\" ];");
 			lower.println("  rr:graph <" + this.outputGraph + ">;");
 			lower.println("];");
 		}
-		upper.println("  from\n    " + table + ";");
+		upper.println("  from\n    " + fromQuery + ";");
 		upper.println("\"\"\"];");
 
 		lower.println(".");

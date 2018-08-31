@@ -40,8 +40,6 @@ docker run -it --rm --link drill:drill -v /data:/data autorml -j "jdbc:drill:dri
 docker run -it --rm --link postgres:postgres autorml -j "jdbc:postgresql://postgres:5432/drugcentral" -u postgres -p pwd
 ```
 
-
-
 ### Jdbc URL
 
 ```shell
