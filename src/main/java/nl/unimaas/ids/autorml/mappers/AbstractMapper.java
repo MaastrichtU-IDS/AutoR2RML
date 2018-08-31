@@ -30,10 +30,13 @@ public abstract class AbstractMapper implements MapperInterface {
 	}
 	
 	@SuppressWarnings("resource")
-	void generateImport(PrintStream ps, String baseUri) {
+	void generateImportAndGraph(PrintStream ps, String baseDir) {
+		if (this.outputGraph == null) {
+			this.outputGraph = this.baseUri + "/graph" + baseDir;
+		}
 		PrintWriter writer = new PrefixPrintWriter(ps);
 		writer.println("@prefix rr: <http://www.w3.org/ns/r2rml#>."); 
-		writer.println("@prefix kraken: <" + baseUri + ">.");
+		writer.println("@prefix kraken: <" + this.baseUri + ">.");
 		writer.flush();
 	}
 	

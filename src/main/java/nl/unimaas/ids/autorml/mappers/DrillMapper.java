@@ -28,12 +28,8 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 			throws Exception {
 		if (path.endsWith("/"))
 			path = path.substring(0, path.length() - 1);
-		
-		// TODO: not satisfied with this solution
-		if (this.outputGraph == null)
-			this.outputGraph = this.baseUri + "/graph" + path;
 
-		generateImport(ps, this.outputGraph);
+		generateImportAndGraph(ps, path);
 		
 		List<String> filePaths = getFilesRecursivelyAsList(connection, path, recursive);
 
