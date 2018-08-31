@@ -1,14 +1,14 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 # AutoRML
-AutoRML generates automated R2RML mapping files for the following file formats:
+AutoRML automatically generates R2RML mapping files for the following inputs:
 
-* Comma-separated (.csv)
-* Tab-separated (.tsv)
-* Pipe-separated (.psv)
-* SQLite (.sqlite and .db) 
-* Postgres
-* MySQL
+* Comma-separated files (.csv)
+* Tab-separated files (.tsv)
+* Pipe-separated files (.psv)
+* SQLite files (.sqlite and .db) 
+* Postgres database connection
+* MySQL database connection
 
 The RDBMS metadata are retrieved using JDBC to build the mapping file. The text file contents are queries through JDBC using [Apache Drill](https://drill.apache.org). It uses the first row of each file as header. The mapping file should work out of the box and represent generic rdf representations with a unique id representing the filepath and row-number within the file.
 
@@ -59,6 +59,8 @@ autodrill [-?r] [-b=<baseUri>] [-d=<baseDir>] [-g=<outputGraph>]
                  -j=<jdbcurl> [-o=<outputFilepath>] [-p=<password>]
                  [-u=<username>]
   -?, --help                Display a help message
+  -j, --jdbcurl=<jdbcurl>   Required. The URL for the Jdbc connector. E.g.: jdbc:
+                              drill:drillbit=localhost:31010
   -b, --baseUri=<baseUri>   Base URI used to built the dataset URIs. Default: http:
                               //kraken/
   -d, --directory=<baseDir> Base directory to scan for structured files with Apache
@@ -66,8 +68,6 @@ autodrill [-?r] [-b=<baseUri>] [-d=<baseDir>] [-g=<outputGraph>]
                               Drill running (/data by default)
   -g, --graph=<outputGraph> URL of the Graph the nquads will belong to. If empty, it
                               will be generated.
-  -j, --jdbcurl=<jdbcurl>   Required. The URL for the Jdbc connector. E.g.: jdbc:
-                              drill:drillbit=localhost:31010
   -o, --outputfile=<outputFilepath>
                             Path to the file where the mappings will be stored. If
                               empty, then mappings go to System.out

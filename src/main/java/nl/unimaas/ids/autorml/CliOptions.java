@@ -31,6 +31,6 @@ public class CliOptions {
 	String outputGraph = null;
 	
 	@Option(names= {"-b", "--baseUri"}, description = "Base URI used to built the dataset URIs. Default: http://kraken/")
-	String baseUri = "http://kraken/";
+	String baseUri = "http://kraken.semanticscience.org/";
 
 }
