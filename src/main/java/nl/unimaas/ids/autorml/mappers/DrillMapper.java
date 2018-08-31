@@ -103,7 +103,7 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 			if (isDirectory && recursive)
 				ret.addAll(getFilesRecursivelyAsList(connection, filePath, true));
 			else if (fileName.contains(".")
-					&& acceptedFileTypes.contains(fileName.substring(fileName.lastIndexOf(".") + 1)))
+					&& acceptedTsvFileTypes.contains(fileName.substring(fileName.lastIndexOf(".") + 1)))
 				ret.add(filePath);
 		}
 		rs.close();

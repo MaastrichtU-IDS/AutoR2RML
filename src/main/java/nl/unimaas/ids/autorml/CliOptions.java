@@ -17,17 +17,17 @@ public class CliOptions {
 	@Option(names= {"-j", "--jdbcurl"}, description = "Connect to drill host", required = true)
 	String jdbcurl = null;
 	
-	@Option(names= {"-un", "--username"}, description = "Username for login if not empty")
-	String userName = null;
+	@Option(names= {"-u", "--username"}, description = "Username for login if not empty")
+	String username = null;
 	
-	@Option(names= {"-pw", "--password"}, description = "Password for Username")
-	String passWord = null;
+	@Option(names= {"-p", "--password"}, description = "Password for Username")
+	String password = null;
 	
 	@Option(names = {"-o", "--outputfile"}, description = "Path to the file where the mappings will be stored. If empty, then mappings go to System.out" )
-	String outputFilePath = null;
+	String outputFilepath = null;
 	
 	
-	@Parameters(paramLabel="DIRECTORY", description = "Base directory to scan for structured files")
+	@Parameters(paramLabel="DIRECTORY", description = "Base directory to scan for structured files. Needs to be under the dir scanned by Apache Drill running (/data by default)")
 	String baseDir;
 
 }

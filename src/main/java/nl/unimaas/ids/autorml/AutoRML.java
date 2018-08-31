@@ -11,8 +11,6 @@ import nl.unimaas.ids.autorml.mappers.MapperInterface;
 import picocli.CommandLine;
 
 public class AutoRML {
-	final static String ROW_NUM_NAME = "ROWNUM_PER_FILE";
-	final static List<String> acceptedFileTypes = Arrays.asList(new String[] {"csv", "tsv", "psv"});
 
 	public static void main(String[] args) throws Exception {
 		try {
@@ -20,11 +18,11 @@ public class AutoRML {
 			if(cli.help) 
 				printUsageAndExit();
 		
-			MapperInterface mapper = MapperFactory.getMapper(cli.jdbcurl, cli.userName, cli.passWord);
+			MapperInterface mapper = MapperFactory.getMapper(cli.jdbcurl, cli.username, cli.password);
 			
 			PrintStream ps = System.out;
-			if(cli.outputFilePath!=null)
-				ps = new PrintStream(new FileOutputStream(new File(cli.outputFilePath)));
+			if(cli.outputFilepath!=null)
+				ps = new PrintStream(new FileOutputStream(new File(cli.outputFilepath)));
 			
 			mapper.generateMapping(ps, cli.recursive, cli.baseDir);
 			

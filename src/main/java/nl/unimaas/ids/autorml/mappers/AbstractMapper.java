@@ -13,7 +13,7 @@ import nl.unimaas.ids.util.PrefixPrintWriter;
 
 public abstract class AbstractMapper implements MapperInterface {
 	final static String ROW_NUM_NAME = "ROWNUM_PER_FILE";
-	final static List<String> acceptedFileTypes = Arrays.asList(new String[] { "csv", "tsv", "psv" });
+	final static List<String> acceptedTsvFileTypes = Arrays.asList(new String[] { "csv", "tsv", "psv" });
 	
 	Connection connection;
 	
