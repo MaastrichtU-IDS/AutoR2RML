@@ -20,21 +20,19 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		// TODO: Class.forName should not be necessary any more
 		Class.forName("org.apache.drill.jdbc.Driver"); 
 		connection = DriverManager.getConnection(jdbcUrl, username, password);
-		
-		// TODO: properly generate output graph and move baseURI in a common method
-		if (this.outputGraph == null)
-			this.outputGraph = "http://kraken/graph/default";
-		else
-			this.outputGraph = outputGraph;
 		this.baseUri = baseUri;
+		this.outputGraph = outputGraph;
 	}
 
 
 	public void generateMapping(PrintStream ps, boolean recursive, String path)
 			throws Exception {
-
 		if (path.endsWith("/"))
 			path = path.substring(0, path.length() - 1);
+		
+		// TODO: not satisfied with this solution
+		if (this.outputGraph == null)
+			this.outputGraph = this.baseUri + "/graph" + path;
 
 		List<String> filePaths = getFilesRecursivelyAsList(connection, path, recursive);
 

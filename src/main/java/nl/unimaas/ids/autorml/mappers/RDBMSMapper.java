@@ -14,16 +14,19 @@ public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 		Class.forName("org.sqlite.JDBC");
 		Class.forName("org.postgresql.Driver");
 		connection = DriverManager.getConnection(jdbcUrl, username, password);
-		if (this.outputGraph == null)
-			this.outputGraph = "http://kraken/graph/default";
-		else
-			this.outputGraph = outputGraph;
+		this.outputGraph = outputGraph;
 		this.baseUri = baseUri;
 	}
 
 
 	@Override
 	public void generateMapping(PrintStream out, boolean recursive, String baseDir) throws Exception {
+		// TODO: properly generate output graph. not satisfied with this solution
+		if (baseDir == null)
+			baseDir = "/data";
+		if (this.outputGraph == null)
+			this.outputGraph = this.baseUri + "/graph" + baseDir;
+		
 		DatabaseMetaData md = connection.getMetaData();
 		ResultSet rs = md.getTables(null, null, "%", new String[] { "TABLE" });
 		while (rs.next()) {
