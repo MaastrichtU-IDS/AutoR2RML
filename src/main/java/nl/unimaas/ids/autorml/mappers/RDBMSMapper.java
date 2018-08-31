@@ -27,6 +27,8 @@ public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 		if (this.outputGraph == null)
 			this.outputGraph = this.baseUri + "/graph" + baseDir;
 		
+		generateImport(out, this.outputGraph);
+		
 		DatabaseMetaData md = connection.getMetaData();
 		ResultSet rs = md.getTables(null, null, "%", new String[] { "TABLE" });
 		while (rs.next()) {

@@ -29,6 +29,13 @@ public abstract class AbstractMapper implements MapperInterface {
 			connection.close();
 	}
 	
+	@SuppressWarnings("resource")
+	void generateImport(PrintStream ps, String baseUri) {
+		PrintWriter writer = new PrefixPrintWriter(ps);
+		writer.println(baseUri);
+		writer.flush();
+	}
+	
 	// TODO: should we put generateR2RML in the MapperInterface?
 	void generateR2RML(String table, String[] columns, PrintStream ps, String label) throws Exception {
 		generateR2RML(table, columns, ps, label, null);
