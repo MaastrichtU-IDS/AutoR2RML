@@ -24,10 +24,10 @@ docker build -t autorml .
 
 ```shell
 # Mappings to System.out
-docker run -it --rm --link drill:drill autorml -j "jdbc:drill:drillbit=drill:31010" -r /data/pharmgkb_drugs
+docker run -it --rm --link drill:drill autorml -j "jdbc:drill:drillbit=drill:31010" -d /data/pharmgkb_drugs -r
 
 # Mappings to a file
-docker run -it --rm --link drill:drill -v /data:/data autorml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.ttl -r /data/pharmgkb_drugs
+docker run -it --rm --link drill:drill -v /data:/data autorml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -r
 ```
 
 #### Using RDBMS
@@ -52,19 +52,20 @@ jdbc:postgresql://localhost:5432/database
 ### Options
 
 ```shell
-autodrill [-?r] -j=<jdbcurl> [-o=<outputFilepath>] [-p=<password>]
-                 [-u=<username>] DIRECTORY
-      DIRECTORY             Base directory to scan for structured files. Needs to be
-                            under the dir scanned by Apache Drill running (/data
-                            by default)
-  -?, --help                display a help message
-  -j, --jdbcurl=<jdbcurl>   Connect to drill host
+autodrill [-?r] [-d=<baseDir>] -j=<jdbcurl> [-o=<outputFilepath>]
+                 [-p=<password>] [-u=<username>]
+  -j, --jdbcurl=<jdbcurl>   Required. The URL for the Jdbc connector. E.g.: jdbc:drill:
+                              drillbit=localhost:31010
+  -?, --help                Display a help message
+  -d, --directory=<baseDir> Base directory to scan for structured files with Apache
+                              Drill. Needs to be under the dir scanned by Apache
+                              Drill running (/data by default)
   -o, --outputfile=<outputFilepath>
                             Path to the file where the mappings will be stored. If
-                            empty, then mappings go to System.out
-  -u, --username=<username> Username for login if not empty
-  -p, --password=<password> Password for Username
-  -r, --recursive           process subDirectories recursively
+                              empty, then mappings go to System.out
+  -u, --username=<username> Username for database login, if needed
+  -p, --password=<password> Password for database username, if needed.
+  -r, --recursive           Process subDirectories recursively
 ```
 ### IDE run config
 
@@ -73,5 +74,5 @@ autodrill [-?r] -j=<jdbcurl> [-o=<outputFilepath>] [-p=<password>]
 nl.unimaas.ids.autorml.AutoRML
 
 # Program arguments for Drill
--j "jdbc:drill:drillbit=localhost:31010" -o /data/pharmgkb_drugs/mapping.ttl -r /data/pharmgkb_drugs
+-j "jdbc:drill:drillbit=localhost:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -r
 ```

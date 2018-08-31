@@ -7,27 +7,25 @@ import picocli.CommandLine.Parameters;
 @Command(name = "autodrill")
 public class CliOptions {
 	
-	@Option(names = { "-?", "--help" }, usageHelp = true, description = "display a help message")
+	@Option(names = { "-?", "--help" }, usageHelp = true, description = "Display a help message")
 	boolean help = false;
 	
-	@Option(names= {"-r", "--recursive"}, description = "process subDirectories recursively")
-	boolean recursive = false;
-	
-	// e.g. jdbc:drill:drillbit=localhost:31010
-	@Option(names= {"-j", "--jdbcurl"}, description = "The URL for the Jdbc connector. E.g.: jdbc:drill:drillbit=localhost:31010", required = true)
+	@Option(names= {"-j", "--jdbcurl"}, description = "Required. The URL for the Jdbc connector. E.g.: jdbc:drill:drillbit=localhost:31010", required = true)
 	String jdbcurl = null;
 	
-	@Option(names= {"-u", "--username"}, description = "Username for login if not empty")
+	@Option(names= {"-r", "--recursive"}, description = "Process subDirectories recursively")
+	boolean recursive = false;
+	
+	@Option(names= {"-u", "--username"}, description = "Username for database login, if needed")
 	String username = null;
 	
-	@Option(names= {"-p", "--password"}, description = "Password for Username")
+	@Option(names= {"-p", "--password"}, description = "Password for database username, if needed.")
 	String password = null;
 	
 	@Option(names = {"-o", "--outputfile"}, description = "Path to the file where the mappings will be stored. If empty, then mappings go to System.out" )
 	String outputFilepath = null;
 	
-	
-	@Parameters(paramLabel="DIRECTORY", description = "Base directory to scan for structured files. Needs to be under the dir scanned by Apache Drill running (/data by default)")
+	@Option(names= {"-d", "--directory"}, description = "Base directory to scan for structured files with Apache Drill. Needs to be under the dir scanned by Apache Drill running (/data by default)")
 	String baseDir;
 
 }
