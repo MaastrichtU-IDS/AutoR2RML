@@ -20,6 +20,8 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		// TODO: Class.forName should not be necessary any more
 		Class.forName("org.apache.drill.jdbc.Driver"); 
 		connection = DriverManager.getConnection(jdbcUrl, username, password);
+		
+		// TODO: properly generate output graph and move baseURI in a common method
 		if (this.outputGraph == null)
 			this.outputGraph = "http://kraken/graph/default";
 		else
@@ -44,11 +46,11 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 			
 			String table = "dfs.root.`" + filePath + "`";
 			
-			generateMapping(table, columns, ps, ("Mapping" + count++));
+			generateR2RML(table, columns, ps, ("Mapping" + count++));
 			
 			for(int i=0; i<columns.length; i++) 
 				columns[i] = "Column" + (i+1);
-			generateMapping(table, columns, ps, ("Mapping" + count++), "# ");
+			generateR2RML(table, columns, ps, ("Mapping" + count++), "# ");
 		}
 
 	}
