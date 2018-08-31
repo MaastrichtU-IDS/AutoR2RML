@@ -20,14 +20,33 @@ docker build -t autorml .
 
 ### Docker
 
+#### Using Apache Drill
+
 ```shell
-docker run -it --rm autorml -j "jdbc:drill:drillbit=localhost:31010" -r /data/pharmgkb_drugs
+# Mappings to System.out
+docker run -it --rm --link drill:drill autorml -j "jdbc:drill:drillbit=drill:31010" -r /data/pharmgkb_drugs
+
+# Mappings to a file
+docker run -it --rm --link drill:drill -v /data:/data autorml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.ttl -r /data/pharmgkb_drugs
 ```
+
+#### Using RDBMS
+
+```shell
+# Postgres
+docker run -it --rm --link postgres:postgres autorml -j "jdbc:postgresql://postgres:5432/drugcentral" -u postgres -p pwd
+```
+
+
 
 ### Jdbc URL
 
 ```shell
+# For Apache Drill
 jdbc:drill:drillbit=localhost:31010
+
+# For Postgres
+jdbc:postgresql://localhost:5432/database
 ```
 
 ### Options
@@ -53,6 +72,6 @@ autodrill [-?r] -j=<jdbcurl> [-o=<outputFilepath>] [-p=<password>]
 # Main class
 nl.unimaas.ids.autorml.AutoRML
 
-# Program arguments.
--j "jdbc:drill:drillbit=localhost:31010" -r /data/pharmgkb_drugs
+# Program arguments for Drill
+-j "jdbc:drill:drillbit=localhost:31010" -o /data/pharmgkb_drugs/mapping.ttl -r /data/pharmgkb_drugs
 ```

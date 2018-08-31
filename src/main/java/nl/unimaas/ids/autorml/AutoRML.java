@@ -21,9 +21,11 @@ public class AutoRML {
 			MapperInterface mapper = MapperFactory.getMapper(cli.jdbcurl, cli.username, cli.password);
 			
 			PrintStream ps = System.out;
-			if(cli.outputFilepath!=null)
-				ps = new PrintStream(new FileOutputStream(new File(cli.outputFilepath)));
-			
+			if(cli.outputFilepath!=null) {
+				File outputFile = new File(cli.outputFilepath);
+				ps = new PrintStream(new FileOutputStream(outputFile));
+			}
+				
 			mapper.generateMapping(ps, cli.recursive, cli.baseDir);
 			
 			mapper.close();
