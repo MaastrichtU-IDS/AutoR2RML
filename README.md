@@ -30,7 +30,7 @@ docker run -it --rm --link drill:drill autorml -j "jdbc:drill:drillbit=drill:310
 docker run -it --rm --link drill:drill -v /data:/data autorml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -r
 
 # With defined base URI and output Graph URI
-docker run -it --rm --link drill:drill -v /data:/data autorml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -g http://kraken/graph/pharmgkb_drugs -b http://kraken.org/ -r
+docker run -it --rm --link drill:drill -v /data:/data autorml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -g http://kraken/graph/pharmgkb_drugs -b http://kraken.semanticscience.org/ -r
 ```
 
 #### Using RDBMS

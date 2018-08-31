@@ -32,7 +32,8 @@ public abstract class AbstractMapper implements MapperInterface {
 	@SuppressWarnings("resource")
 	void generateImport(PrintStream ps, String baseUri) {
 		PrintWriter writer = new PrefixPrintWriter(ps);
-		writer.println(baseUri);
+		writer.println("@prefix rr: <http://www.w3.org/ns/r2rml#>."); 
+		writer.println("@prefix kraken: <" + baseUri + ">.");
 		writer.flush();
 	}
 	
