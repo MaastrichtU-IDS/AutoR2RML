@@ -14,7 +14,7 @@ public class CliOptions {
 	boolean recursive = false;
 	
 	// e.g. jdbc:drill:drillbit=localhost:31010
-	@Option(names= {"-j", "--jdbcurl"}, description = "Connect to drill host", required = true)
+	@Option(names= {"-j", "--jdbcurl"}, description = "The URL for the Jdbc connector. E.g.: jdbc:drill:drillbit=localhost:31010", required = true)
 	String jdbcurl = null;
 	
 	@Option(names= {"-u", "--username"}, description = "Username for login if not empty")
