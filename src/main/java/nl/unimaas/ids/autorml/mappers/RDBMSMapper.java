@@ -34,7 +34,7 @@ public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 			  columns.add(rs2.getString(4));
 		  
 		  String[] col = (String[]) columns.toArray(new String[0]);
-		  generateR2RML(table, table, col, System.out, "Mapping");
+		  generateR2RML("/" + table, table, col, System.out, "Mapping");
 		  
 		}
 		
