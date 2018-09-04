@@ -8,8 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.text.CaseUtils;
-
 public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 
 	public RDBMSMapper(String jdbcUrl, String username, String password, String outputGraph, String baseUri) throws SQLException, ClassNotFoundException {
