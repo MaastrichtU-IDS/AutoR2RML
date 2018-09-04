@@ -1,7 +1,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 # AutoR2RML
-AutoRML automatically generates R2RML mapping files for the following inputs:
+AutoR2RML automatically generates R2RML mapping files for the following inputs:
 
 * Comma-separated files (.csv)
 * Tab-separated files (.tsv)
