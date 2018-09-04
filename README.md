@@ -8,7 +8,8 @@ AutoR2RML automatically generates R2RML mapping files for the following inputs:
 * Pipe-separated files (.psv)
 * SQLite files (.sqlite and .db) 
 * Postgres database connection
-* MySQL database connection
+* MySQL/MariaDB database connection
+* Apache Derby, HSQLDB, SQLite
 
 The RDBMS metadata are retrieved using JDBC to build the mapping file. The text file contents are queries through JDBC using [Apache Drill](https://drill.apache.org). It uses the first row of each file as header. The mapping file should work out of the box and represent generic rdf representations with a unique id representing the filepath and row-number within the file.
 
