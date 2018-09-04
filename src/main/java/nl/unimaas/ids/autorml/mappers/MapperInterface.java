@@ -10,7 +10,7 @@ public interface MapperInterface {
 	
 	public String getColumnName(String column);
 	
-	public String getSqlForRowNum();
+	public String getSqlForRowNum(String firstTable);
 	
 	public String getSqlForColumn(String column, int index);
 

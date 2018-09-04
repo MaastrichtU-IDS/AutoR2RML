@@ -1,7 +1,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-# AutoRML
-AutoRML automatically generates R2RML mapping files for the following inputs:
+# AutoR2RML
+AutoR2RML automatically generates R2RML mapping files for the following inputs:
 
 * Comma-separated files (.csv)
 * Tab-separated files (.tsv)
@@ -14,7 +14,9 @@ The RDBMS metadata are retrieved using JDBC to build the mapping file. The text 
 
 ## Build
 ```shell
-docker build -t autorml .
+./build.sh
+# Or directly the Docker command
+docker build -t autor2rml .
 ```
 ## Run
 
@@ -24,13 +26,13 @@ docker build -t autorml .
 
 ```shell
 # Mappings to System.out
-docker run -it --rm --link drill:drill autorml -j "jdbc:drill:drillbit=drill:31010" -d /data/pharmgkb_drugs -r
+docker run -it --rm --link drill:drill autor2rml -j "jdbc:drill:drillbit=drill:31010" -d /data/pharmgkb_drugs -r
 
 # Mappings to a file
-docker run -it --rm --link drill:drill -v /data:/data autorml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -r
+docker run -it --rm --link drill:drill -v /data:/data autor2rml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -r
 
 # With defined base URI and output Graph URI
-docker run -it --rm --link drill:drill -v /data:/data autorml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -g http://kraken/graph/pharmgkb_drugs -b http://kraken/ -r
+docker run -it --rm --link drill:drill -v /data:/data autor2rml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -g http://kraken/graph/pharmgkb_drugs -b http://kraken/ -r
 ```
 
 #### Using RDBMS
@@ -43,8 +45,8 @@ docker exec -it postgres bash
 su postgres
 psql drugcentral < /data/drugcentral.dump.08262018.sql
 
-# Run AutoRML on DB
-docker run -it --rm --link postgres:postgres -v /data:/data autorml -j "jdbc:postgresql://postgres:5432/drugcentral" -u postgres -p pwd -g http://kraken/graph/drugcentral -b http://kraken/ -o /data/drugcentral/mapping.ttl
+# Run autor2rml on DB
+docker run -it --rm --link postgres:postgres -v /data:/data autor2rml -j "jdbc:postgresql://postgres:5432/drugcentral" -u postgres -p pwd -g http://kraken/graph/drugcentral -b http://kraken/ -o /data/drugcentral/mapping.ttl
 ```
 
 ### Jdbc URL
@@ -84,7 +86,7 @@ autodrill [-?r] [-b=<baseUri>] [-d=<baseDir>] [-g=<outputGraph>]
 
 ```shell
 # Main class
-nl.unimaas.ids.autorml.AutoRML
+nl.unimaas.ids.autor2rml.autor2rml
 
 # Program arguments for Drill
 -j "jdbc:drill:drillbit=localhost:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -r

@@ -124,7 +124,7 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 	}
 
 	@Override
-	public String getSqlForRowNum() {
+	public String getSqlForRowNum(String firstTable) {
 		return "row_number() over (partition by filename) as " + ROW_NUM_NAME;
 	}
 

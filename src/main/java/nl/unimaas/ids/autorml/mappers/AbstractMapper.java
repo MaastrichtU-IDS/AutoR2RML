@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import nl.unimaas.ids.util.PrefixPrintWriter;
 
 public abstract class AbstractMapper implements MapperInterface {
-	final static String ROW_NUM_NAME = "ROWNUM";
+	final static String ROW_NUM_NAME = "rownum";
 	
 	Connection connection;
 	String outputGraph;
@@ -56,7 +56,7 @@ public abstract class AbstractMapper implements MapperInterface {
 		lower.println("  rr:graph <" + this.outputGraph + ">;");
 		lower.println("];");
 		
-		upper.println("  select " + getSqlForRowNum());
+		upper.println("  SELECT " + getSqlForRowNum(columns[0]));
 		for (int i = 0; i < columns.length; i++) {
 			String column = columns[i];
 			String columnName = getColumnName(column);
@@ -67,7 +67,7 @@ public abstract class AbstractMapper implements MapperInterface {
 			lower.println("  rr:graph <" + this.outputGraph + ">;");
 			lower.println("];");
 		}
-		upper.println("  from\n    " + fromQuery + ";");
+		upper.println("  FROM\n    " + fromQuery + ";");
 		upper.println("\"\"\"];");
 
 		lower.println(".");
