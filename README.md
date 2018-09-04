@@ -20,7 +20,7 @@ docker build -t autorml .
 
 ### Docker
 
-#### Using Apache Drill
+#### Using Apache Drill for TSV files
 
 ```shell
 # Mappings to System.out
@@ -30,14 +30,21 @@ docker run -it --rm --link drill:drill autorml -j "jdbc:drill:drillbit=drill:310
 docker run -it --rm --link drill:drill -v /data:/data autorml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -r
 
 # With defined base URI and output Graph URI
-docker run -it --rm --link drill:drill -v /data:/data autorml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -g http://kraken/graph/pharmgkb_drugs -b http://kraken.semanticscience.org/ -r
+docker run -it --rm --link drill:drill -v /data:/data autorml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -g http://kraken/graph/pharmgkb_drugs -b http://kraken/ -r
 ```
 
 #### Using RDBMS
 
 ```shell
-# Postgres
-docker run -it --rm --link postgres:postgres autorml -j "jdbc:postgresql://postgres:5432/drugcentral" -u postgres -p pwd
+## Postgres (run docker)
+# Run and load Postgres DB
+docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=pwd -d -v /data/drugcentral/:/data postgres
+docker exec -it postgres bash
+su postgres
+psql drugcentral < /data/drugcentral.dump.08262018.sql
+
+# Run AutoRML on DB
+docker run -it --rm --link postgres:postgres autorml -j "jdbc:postgresql://postgres:5432/drugcentral" -u postgres -p pwd -g http://kraken/graph/pharmgkb_drugs -b http://kraken/
 ```
 
 ### Jdbc URL

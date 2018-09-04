@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.text.CaseUtils;
@@ -16,7 +17,7 @@ import org.apache.commons.text.CaseUtils;
 import nl.unimaas.ids.util.PrefixPrintWriter;
 
 public class DrillMapper extends AbstractMapper implements MapperInterface {
-	//Connection connection;
+	final static List<String> acceptedTsvFileTypes = Arrays.asList(new String[] { "csv", "tsv", "psv" });
 
 	public DrillMapper(String jdbcUrl, String username, String password, String outputGraph, String baseUri) throws SQLException, ClassNotFoundException {
 		// TODO: Class.forName should not be necessary any more
