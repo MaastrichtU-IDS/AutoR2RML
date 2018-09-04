@@ -20,9 +20,9 @@ public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 
 
 	@Override
-	public void generateMapping(PrintStream out, boolean recursive, String baseDir) throws Exception {
+	public void generateMapping(PrintStream ps, boolean recursive, String baseDir) throws Exception {
 		// TODO: properly generate output graph. not satisfied with this solution		
-		generateImportAndGraph(out, baseDir);
+		generateImportAndGraph(ps, baseDir);
 		
 		DatabaseMetaData md = connection.getMetaData();
 		ResultSet rs = md.getTables(null, null, "%", new String[] { "TABLE" });
@@ -34,7 +34,7 @@ public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 			  columns.add(rs2.getString(4));
 		  
 		  String[] col = (String[]) columns.toArray(new String[0]);
-		  generateR2RML("/" + table, table, col, System.out, "Mapping");
+		  generateR2RML("/" + table, table, col, ps, "Mapping");
 		  
 		}
 		
