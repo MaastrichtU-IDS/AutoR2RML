@@ -44,7 +44,7 @@ su postgres
 psql drugcentral < /data/drugcentral.dump.08262018.sql
 
 # Run AutoRML on DB
-docker run -it --rm --link postgres:postgres -v /data:/data autorml -j "jdbc:postgresql://postgres:5432/drugcentral" -u postgres -p pwd -g http://kraken/graph/pharmgkb_drugs -b http://kraken/ -o /data/drugcentral/mapping.ttl
+docker run -it --rm --link postgres:postgres -v /data:/data autorml -j "jdbc:postgresql://postgres:5432/drugcentral" -u postgres -p pwd -g http://kraken/graph/drugcentral -b http://kraken/ -o /data/drugcentral/mapping.ttl
 ```
 
 ### Jdbc URL
