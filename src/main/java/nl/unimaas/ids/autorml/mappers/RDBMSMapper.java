@@ -26,6 +26,9 @@ public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 		
 		DatabaseMetaData md = connection.getMetaData();
 		ResultSet rs = md.getTables(null, null, "%", new String[] { "TABLE" });
+		int count = 1;
+		
+		// Iterate over tables to add a R2RML mapping for each of them
 		while (rs.next()) {
 		  String table = rs.getString(3);
 		  ResultSet rs2 = md.getColumns(null, null, table, null);
@@ -34,7 +37,7 @@ public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 			  columns.add(rs2.getString(4));
 		  
 		  String[] col = (String[]) columns.toArray(new String[0]);
-		  generateR2RML("/" + table, table, col, ps, "Mapping");
+		  generateR2RML("/" + table, table, col, ps, "Mapping" + count++);
 		  
 		}
 		
