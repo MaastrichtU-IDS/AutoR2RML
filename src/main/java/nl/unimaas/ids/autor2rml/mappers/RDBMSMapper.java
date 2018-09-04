@@ -1,4 +1,4 @@
-package nl.unimaas.ids.autorml.mappers;
+package nl.unimaas.ids.autor2rml.mappers;
 
 import java.io.PrintStream;
 import java.sql.DatabaseMetaData;
@@ -11,8 +11,6 @@ import java.util.List;
 public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 
 	public RDBMSMapper(String jdbcUrl, String username, String password, String outputGraph, String baseUri) throws SQLException, ClassNotFoundException {
-		Class.forName("org.sqlite.JDBC");
-		Class.forName("org.postgresql.Driver");
 		connection = DriverManager.getConnection(jdbcUrl, username, password);
 		this.outputGraph = outputGraph;
 		this.baseUri = baseUri;

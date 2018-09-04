@@ -47,15 +47,8 @@ psql drugcentral < /data/drugcentral.dump.08262018.sql
 docker run -it --rm --link postgres:postgres -v /data:/data autorml -j "jdbc:postgresql://postgres:5432/drugcentral" -u postgres -p pwd -g http://kraken/graph/pharmgkb_drugs -b http://kraken/ -o /data/drugcentral/mapping.ttl
 ```
 
-### Jdbc URL
-
-```shell
-# For Apache Drill
-jdbc:drill:drillbit=localhost:31010
-
-# For Postgres
-jdbc:postgresql://localhost:5432/database
-```
+### Jdbc Support
+AutoR2RML comes with JDBC4 drivers for Apache Drill, PostgreSQL, MariaDB, MySQL, Apache Derby, HSQLDB, and SQLite. Make sure to use the correct jdbc-url. 
 
 ### Options
 

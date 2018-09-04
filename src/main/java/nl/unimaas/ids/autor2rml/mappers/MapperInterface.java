@@ -1,4 +1,4 @@
-package nl.unimaas.ids.autorml.mappers;
+package nl.unimaas.ids.autor2rml.mappers;
 
 import java.io.PrintStream;
 

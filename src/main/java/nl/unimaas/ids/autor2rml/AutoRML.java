@@ -1,11 +1,11 @@
-package nl.unimaas.ids.autorml;
+package nl.unimaas.ids.autor2rml;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
-import nl.unimaas.ids.autorml.mappers.MapperFactory;
-import nl.unimaas.ids.autorml.mappers.MapperInterface;
+import nl.unimaas.ids.autor2rml.mappers.MapperFactory;
+import nl.unimaas.ids.autor2rml.mappers.MapperInterface;
 import picocli.CommandLine;
 
 public class AutoRML {

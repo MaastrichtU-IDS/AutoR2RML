@@ -1,4 +1,4 @@
-package nl.unimaas.ids.autorml;
+package nl.unimaas.ids.autor2rml;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
