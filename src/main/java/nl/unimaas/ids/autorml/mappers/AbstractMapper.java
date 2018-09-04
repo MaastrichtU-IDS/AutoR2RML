@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.text.CaseUtils;
-
 import nl.unimaas.ids.util.PrefixPrintWriter;
 
 public abstract class AbstractMapper implements MapperInterface {
@@ -60,14 +58,12 @@ public abstract class AbstractMapper implements MapperInterface {
 		lower.println("  rr:template \"" + this.baseUri + uriPath + "/{" + ROW_NUM_NAME + "}\";");
 		lower.println("  rr:graph <" + this.outputGraph + ">;");
 		lower.println("];");
-
-		upper.println("  select row_number() over (partition by filename) as " + ROW_NUM_NAME);
+		
+		upper.println("  select " + getSqlForRowNum());
 		for (int i = 0; i < columns.length; i++) {
 			String column = columns[i];
-			String columnName = CaseUtils.toCamelCase(column, true, new char[] { '-' });
-
-			upper.println("    , columns[" + i + "] as `" + columnName + "`");
-
+			String columnName = getColumnName(column);
+			upper.println("    , " + getSqlForColumn(columnName, i));
 			lower.println("rr:predicateObjectMap [");
 			lower.println("  rr:predicate " + this.baseUri + uriPath + "/" + columnName + ";");
 			lower.println("  rr:objectMap [ rr:column \"" + columnName + "\" ];");

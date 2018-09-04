@@ -11,6 +11,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.text.CaseUtils;
+
 import nl.unimaas.ids.util.PrefixPrintWriter;
 
 public class DrillMapper extends AbstractMapper implements MapperInterface {
@@ -112,6 +114,21 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 
 		return ret;
 
+	}
+
+	@Override
+	public String getColumnName(String column) {
+		return CaseUtils.toCamelCase(column, true, new char[] { '-' });
+	}
+
+	@Override
+	public String getSqlForRowNum() {
+		return "row_number() over (partition by filename) as " + ROW_NUM_NAME;
+	}
+
+	@Override
+	public String getSqlForColumn(String column, int index) {
+		return "columns[" + index + "] as `" + column + "`";
 	}
 
 
