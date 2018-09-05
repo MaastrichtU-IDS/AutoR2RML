@@ -40,13 +40,13 @@ docker run -it --rm --link drill:drill -v /data:/data autor2rml -j "jdbc:drill:d
 ```shell
 ## Postgres (run docker)
 # Run and load Postgres DB
-docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=pwd -d -v /data/drugcentral/:/data postgres
+docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=pwd -d -v /data/autor2rml/:/data postgres
 docker exec -it postgres bash
 su postgres
 psql drugcentral < /data/drugcentral.dump.08262018.sql
 
 # Run autor2rml on DB
-docker run -it --rm --link postgres:postgres -v /data:/data autor2rml -j "jdbc:postgresql://postgres:5432/drugcentral" -u postgres -p pwd -g http://kraken/graph/drugcentral -b http://kraken/ -o /data/drugcentral/mapping.ttl
+docker run -it --rm --link postgres:postgres -v /data:/data autor2rml -j "jdbc:postgresql://postgres:5432/drugcentral" -u postgres -p pwd -g http://kraken/graph/drugcentral -b http://kraken/ -o /data/autor2rml/mapping.ttl
 ```
 
 ### Jdbc URL
