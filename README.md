@@ -47,6 +47,10 @@ psql drugcentral < /data/drugcentral.dump.08262018.sql
 
 # Run autor2rml on DB
 docker run -it --rm --link postgres:postgres -v /data:/data autor2rml -j "jdbc:postgresql://postgres:5432/drugcentral" -u postgres -p pwd -g http://kraken/graph/drugcentral -b http://kraken/ -o /data/autor2rml/mapping.ttl
+
+## SQLite
+docker run -it --rm -v /data:/data autor2rml -j "jdbc:sqlite:/data/sqlite/chinook.db" -g http://kraken/graph/sqlite -b http://kraken/ -o /data/sqlite/mapping.ttl
+
 ```
 
 ### Jdbc URL
@@ -57,6 +61,9 @@ jdbc:drill:drillbit=localhost:31010
 
 # For Postgres
 jdbc:postgresql://localhost:5432/database
+
+# For SQLite
+jdbc:sqlite:/data/sqlite/GEOmetadb.sqlite
 ```
 
 ### Options
