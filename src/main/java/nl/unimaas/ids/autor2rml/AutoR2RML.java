@@ -8,7 +8,7 @@ import nl.unimaas.ids.autor2rml.mappers.MapperFactory;
 import nl.unimaas.ids.autor2rml.mappers.MapperInterface;
 import picocli.CommandLine;
 
-public class AutoRML {
+public class AutoR2RML {
 
 	public static void main(String[] args) throws Exception {
 		try {

@@ -5,11 +5,10 @@ AutoR2RML automatically generates R2RML mapping files for the following inputs:
 
 * Comma-separated files (.csv)
 * Tab-separated files (.tsv)
-* Pipe-separated files (.psv)
-* SQLite files (.sqlite and .db) 
-* Postgres database connection
+* Pipe-separated files (.psv) 
 * MySQL/MariaDB database connection
-* Apache Derby, HSQLDB, SQLite
+* Postgres database connection
+* H2 database
 
 The RDBMS metadata are retrieved using JDBC to build the mapping file. The text file contents are queries through JDBC using [Apache Drill](https://drill.apache.org). It uses the first row of each file as header. The mapping file should work out of the box and represent generic rdf representations with a unique id representing the filepath and row-number within the file.
 
@@ -49,7 +48,7 @@ docker run -it --rm --link postgres:postgres -v /data:/data autorml -j "jdbc:pos
 ```
 
 ### Jdbc Support
-AutoR2RML comes with JDBC4 drivers for Apache Drill, PostgreSQL, MariaDB, MySQL, Apache Derby, HSQLDB, and SQLite. Make sure to use the correct jdbc-url. 
+AutoR2RML comes with JDBC4 drivers for Apache Drill (jdbc:drill:), PostgreSQL (jdbc:postgresql:), MySQL (jdbc:mysql:), and H2 (jsbc:h2:). Make sure to use the correct jdbc-url. 
 
 ### Options
 

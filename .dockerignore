@@ -3,3 +3,4 @@ Dockerfile
 .gitignore
 *.md
 example
+target/

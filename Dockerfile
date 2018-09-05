@@ -12,7 +12,7 @@ COPY . .
 RUN mvn clean install -Dmaven.test.skip=true
 
 RUN mkdir $APP_DIR && \
-    mv target/autorml-0.0.1-SNAPSHOT-jar-with-dependencies.jar $APP_DIR/autorml.jar && \
+    mv target/autor2rml-0.0.1-SNAPSHOT-jar-with-dependencies.jar $APP_DIR/autorml.jar && \
     rm -rf $TMP_DIR
     
 WORKDIR $APP_DIR
