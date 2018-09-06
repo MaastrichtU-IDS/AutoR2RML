@@ -59,7 +59,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>nl.unimaas.ids.autorml.AutoRML</mainClass>
+							<mainClass>nl.unimaas.ids.autorml.AutoR2RML</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

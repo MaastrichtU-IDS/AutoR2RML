@@ -10,7 +10,7 @@ import nl.unimaas.ids.autorml.mappers.MapperFactory;
 import nl.unimaas.ids.autorml.mappers.MapperInterface;
 import picocli.CommandLine;
 
-public class AutoRML {
+public class AutoR2RML {
 	final static String ROW_NUM_NAME = "ROWNUM_PER_FILE";
 	final static List<String> acceptedFileTypes = Arrays.asList(new String[] {"csv", "tsv", "psv"});
 
