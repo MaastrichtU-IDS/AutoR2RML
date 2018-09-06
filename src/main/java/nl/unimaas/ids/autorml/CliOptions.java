@@ -2,7 +2,6 @@ package nl.unimaas.ids.autorml;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
 
 @Command(name = "autodrill")
 public class CliOptions {
