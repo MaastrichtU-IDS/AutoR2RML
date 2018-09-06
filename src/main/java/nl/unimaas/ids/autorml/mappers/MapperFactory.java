@@ -8,6 +8,8 @@ public class MapperFactory {
 		MapperInterface ret;
 		if(jdbcUrl.startsWith("jdbc:drill:")) {
 			ret = new DrillMapper(jdbcUrl, userName, passWord);
+		} else if (jdbcUrl.startsWith("jdbc:sqlite:")) {
+			return new SQLiteMapper(jdbcUrl, userName, passWord);
 		} else {
 			ret = new RDBMSMapper(jdbcUrl, userName, passWord);
 		}

@@ -4,22 +4,15 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
 
 import org.apache.commons.text.CaseUtils;
 
 import nl.unimaas.ids.util.PrefixPrintWriter;
 
 public abstract class AbstractMapper implements MapperInterface {
-	final static String ROW_NUM_NAME = "ROWNUM_PER_FILE";
-	final static List<String> acceptedFileTypes = Arrays.asList(new String[] { "csv", "tsv", "psv" });
-	
 	Connection connection;
-	
-	public AbstractMapper() {
-		// TODO Auto-generated constructor stub
-	}
+	final static String ROW_NUM_NAME = "ROWNUM_PER_FILE";	
+	final static String BASE_URI = "http://kraken/";
 	
 	@Override
 	public void close() throws SQLException {
@@ -42,7 +35,7 @@ public abstract class AbstractMapper implements MapperInterface {
 
 		lower.println("rr:subjectMap [");
 		lower.println("  rr:termType rr:IRI;");
-		lower.println("  rr:template \"http://kraken" + table + "/{" + ROW_NUM_NAME + "}\";");
+		lower.println("  rr:template \"" + BASE_URI + "/" + table + "/{" + ROW_NUM_NAME + "}\";");
 		lower.println("];");
 
 		upper.println("  select row_number() over (partition by filename) as " + ROW_NUM_NAME);
@@ -53,7 +46,7 @@ public abstract class AbstractMapper implements MapperInterface {
 			upper.println("    , columns[" + i + "] as `" + columnName + "`");
 
 			lower.println("rr:predicateObjectMap [");
-			lower.println("  rr:predicate http://kraken" + table + "/has" + columnName + ";");
+			lower.println("  rr:predicate " + BASE_URI + "" + table + "/has" + columnName + ";");
 			lower.println("  rr:objectMap [ rr:column \"" + columnName + "\" ];");
 			lower.println("];");
 		}
