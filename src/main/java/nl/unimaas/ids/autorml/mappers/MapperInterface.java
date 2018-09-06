@@ -8,7 +8,7 @@ public interface MapperInterface {
 
 	public void generateMapping(PrintStream out, boolean recursive, String baseDir) throws Exception;
 	
-public String getColumnName(String column);
+	public String getColumnName(String column);
 	
 	public String getSqlForRowNum();
 	

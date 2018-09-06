@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.UUID;
 
 import org.apache.commons.text.CaseUtils;
 
@@ -14,18 +15,25 @@ public abstract class AbstractMapper implements MapperInterface {
 	final static String ROW_NUM_NAME = "ROWNUM_PER_FILE";	
 	final static String BASE_URI = "http://kraken/";
 	
+	private String graph;
+	
+	public AbstractMapper(String jdbcUrl, String userName, String passWord) {
+		this.graph = BASE_URI + "graph/" + UUID.randomUUID() + "/"; 
+		
+	}
+	
 	@Override
 	public void close() throws SQLException {
 		if(connection != null && !connection.isClosed())
 			connection.close();
 	}
 	
-	void generateMapping(String table, String[] columns, PrintStream ps, String label) throws Exception {
-		generateMapping(table, columns, ps, label, null);
+	void generateMappingForTable(String table, String[] columns, PrintStream ps, String label) throws Exception {
+		generateMappingForTable(table, columns, ps, label, null);
 	}
 	
 	@SuppressWarnings("resource")
-	void generateMapping(String table, String[] columns, PrintStream ps, String label, String prefix) throws Exception {
+	void generateMappingForTable(String table, String[] columns, PrintStream ps, String label, String prefix) throws Exception {
 		PrintWriter upper = new PrefixPrintWriter(ps, prefix);
 		PrintWriter lower = new PrefixPrintWriter(ps, prefix);
 
@@ -35,7 +43,8 @@ public abstract class AbstractMapper implements MapperInterface {
 
 		lower.println("rr:subjectMap [");
 		lower.println("  rr:termType rr:IRI;");
-		lower.println("  rr:template \"" + BASE_URI + "/" + table + "/{" + ROW_NUM_NAME + "}\";");
+		lower.println("  rr:template \"" + BASE_URI + cleanTableNameForUri(table) + "/{" + ROW_NUM_NAME + "}\";");
+		lower.println("  rr:graph <" + graph + ">;");
 		lower.println("];");
 
 		upper.println("  select row_number() over (partition by filename) as " + ROW_NUM_NAME);
@@ -46,8 +55,9 @@ public abstract class AbstractMapper implements MapperInterface {
 			upper.println("    , columns[" + i + "] as `" + columnName + "`");
 
 			lower.println("rr:predicateObjectMap [");
-			lower.println("  rr:predicate " + BASE_URI + "" + table + "/has" + columnName + ";");
-			lower.println("  rr:objectMap [ rr:column \"" + columnName + "\" ];");
+			lower.println("  rr:predicate <" + BASE_URI + "" + table + "/" + columnName + ">;");
+			lower.println("  rr:objectMap [ rr:column \"" + cleanTableNameForUri(table) + "\" ];");
+			lower.println("  rr:graph <" + graph + ">;");
 			lower.println("];");
 		}
 		upper.println("  from\n    " + table + ";");
@@ -59,6 +69,19 @@ public abstract class AbstractMapper implements MapperInterface {
 		upper.flush();
 		lower.flush();
 
+	}
+	
+	void generateNamespaces(PrintStream ps) {
+		ps.println("@prefix rr: <http://www.w3.org/ns/r2rml#>.");
+	}
+	
+	private String cleanTableNameForUri(String tableName) {
+		if(!tableName.contains("`"))
+			return tableName;
+		
+		int i1 = tableName.indexOf("`");
+		int i2 = tableName.indexOf("`", i1);
+		return tableName.substring(i1 + 1, i2 -1);
 	}
 
 }

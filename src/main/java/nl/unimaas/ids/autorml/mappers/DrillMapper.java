@@ -21,13 +21,13 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 	final static List<String> acceptedFileTypes = Arrays.asList(new String[] { "csv", "tsv", "psv" });
 
 	public DrillMapper(String jdbcUrl, String userName, String passWord) throws SQLException, ClassNotFoundException {
+		super(jdbcUrl, userName, passWord);
 		Class.forName("org.apache.drill.jdbc.Driver"); 
 		connection = DriverManager.getConnection(jdbcUrl, userName, passWord);
 	}
 
 
-	public void generateMapping(PrintStream ps, boolean recursive, String path)
-			throws Exception {
+	public void generateMapping(PrintStream ps, boolean recursive, String path) throws Exception {
 
 		if (path.endsWith("/"))
 			path = path.substring(0, path.length() - 1);
@@ -36,17 +36,19 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 
 		int count = 1;
 		
+		generateNamespaces(ps);
+		
 		for (String filePath : filePaths) {
 			String[] columns = getColumnNames(filePath);
 			printFirstFiveLines(filePath, ps);
 			
 			String table = "dfs.root.`" + filePath + "`";
 			
-			generateMapping(table, columns, ps, ("Mapping" + count++));
+			generateMappingForTable(table, columns, ps, ("Mapping" + count++));
 			
 			for(int i=0; i<columns.length; i++) 
 				columns[i] = "Column" + (i+1);
-			generateMapping(table, columns, ps, ("Mapping" + count++), "# ");
+			generateMappingForTable(table, columns, ps, ("Mapping" + count++), "# ");
 		}
 
 	}

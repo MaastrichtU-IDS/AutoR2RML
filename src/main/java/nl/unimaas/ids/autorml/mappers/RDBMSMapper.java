@@ -11,6 +11,7 @@ import java.util.List;
 public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 
 	public RDBMSMapper(String jdbcUrl, String userName, String passWord) throws SQLException, ClassNotFoundException {
+		super(jdbcUrl, userName, passWord);
 		Class.forName("org.sqlite.JDBC");
 		Class.forName("org.postgresql.Driver");
 		connection = DriverManager.getConnection(jdbcUrl, userName, passWord);
@@ -21,6 +22,8 @@ public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 	public void generateMapping(PrintStream out, boolean recursive, String baseDir) throws Exception {
 		DatabaseMetaData md = connection.getMetaData();
 		ResultSet rs = md.getTables(null, null, "%", new String[] { "TABLE" });
+		
+		generateNamespaces(out);
 		while (rs.next()) {
 		  String table = rs.getString(3);
 		  ResultSet rs2 = md.getColumns(null, null, table, null);
@@ -29,7 +32,7 @@ public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 			  columns.add(rs2.getString(4));
 		  
 		  String[] col = (String[]) columns.toArray(new String[0]);
-		  generateMapping(table, col, System.out, "test");
+		  generateMappingForTable(table, col, System.out, "test");
 		  
 		}
 		
