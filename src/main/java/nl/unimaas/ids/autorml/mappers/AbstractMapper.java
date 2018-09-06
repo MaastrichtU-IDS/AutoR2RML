@@ -47,7 +47,7 @@ public abstract class AbstractMapper implements MapperInterface {
 		lower.println("  rr:graph <" + graph + ">;");
 		lower.println("];");
 
-		upper.println("  select row_number() over (partition by filename) as " + ROW_NUM_NAME);
+		upper.println("  select " + getSqlForRowNum());
 		for (int i = 0; i < columns.length; i++) {
 			String column = columns[i];
 			String columnName = CaseUtils.toCamelCase(column, true, new char[] { '-' });
