@@ -52,8 +52,9 @@ public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 
 
 	@Override
-	public String getSqlForRowNum(String firstTable) {
-		return "row_number() OVER (ORDER BY " + firstTable + " DESC) AS " + ROW_NUM_NAME;
+	public String getSqlForRowNum(String tableName, String firstColumn) {
+		return "(SELECT COUNT(*) FROM " + tableName + " t2 WHERE t2." + firstColumn + " <= t1." + firstColumn + ") AS " + ROW_NUM_NAME;
+		//return "row_number() OVER (ORDER BY " + firstColumn + " DESC) AS " + ROW_NUM_NAME;
 	}
 
 

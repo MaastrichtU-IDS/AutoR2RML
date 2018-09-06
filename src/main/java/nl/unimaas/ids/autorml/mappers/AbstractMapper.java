@@ -56,7 +56,9 @@ public abstract class AbstractMapper implements MapperInterface {
 		lower.println("  rr:graph <" + this.outputGraph + ">;");
 		lower.println("];");
 		
-		upper.println("  SELECT " + getSqlForRowNum(columns[0]));
+		upper.println("  SELECT " + getSqlForRowNum(fromQuery, columns[0]));
+		// TODO: upper.println("  SELECT " + getSqlForRowNum(columns[0]));
+		// TODO: just change getSqlForRowNum params everywhere it is called.
 		for (int i = 0; i < columns.length; i++) {
 			String column = columns[i];
 			String columnName = getColumnName(column);
@@ -67,7 +69,8 @@ public abstract class AbstractMapper implements MapperInterface {
 			lower.println("  rr:graph <" + this.outputGraph + ">;");
 			lower.println("];");
 		}
-		upper.println("  FROM\n    " + fromQuery + ";");
+		upper.println("  FROM\n    " + fromQuery + " t1;");
+		// TODO: upper.println("  FROM\n    " + fromQuery + ";");
 		upper.println("\"\"\"];");
 
 		lower.println(".");
