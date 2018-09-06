@@ -12,7 +12,7 @@ import nl.unimaas.ids.util.PrefixPrintWriter;
 
 public abstract class AbstractMapper implements MapperInterface {
 	Connection connection;
-	final static String ROW_NUM_NAME = "ROWNUM_PER_FILE";	
+	final static String ROW_NUM_NAME = "ROWNUM";	
 	final static String BASE_URI = "http://kraken/";
 	
 	private String graph;
@@ -50,12 +50,11 @@ public abstract class AbstractMapper implements MapperInterface {
 		upper.println("  select " + getSqlForRowNum());
 		for (int i = 0; i < columns.length; i++) {
 			String column = columns[i];
-			String columnName = CaseUtils.toCamelCase(column, true, new char[] { '-' });
 
-			upper.println("    , columns[" + i + "] as `" + columnName + "`");
+			upper.println("    , columns[" + i + "] as `" + getSqlForColumn(column, i) + "`");
 
 			lower.println("rr:predicateObjectMap [");
-			lower.println("  rr:predicate <" + BASE_URI + "" + table + "/" + columnName + ">;");
+			lower.println("  rr:predicate <" + BASE_URI + "" + table + "/" + getSqlForColumn(column, i) + ">;");
 			lower.println("  rr:objectMap [ rr:column \"" + cleanTableNameForUri(table) + "\" ];");
 			lower.println("  rr:graph <" + graph + ">;");
 			lower.println("];");
