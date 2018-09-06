@@ -6,8 +6,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import org.apache.commons.text.CaseUtils;
-
 import nl.unimaas.ids.util.PrefixPrintWriter;
 
 public abstract class AbstractMapper implements MapperInterface {
