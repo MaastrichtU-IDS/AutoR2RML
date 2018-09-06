@@ -10,7 +10,7 @@ import nl.unimaas.ids.util.PrefixPrintWriter;
 
 public abstract class AbstractMapper implements MapperInterface {
 	Connection connection;
-	final static String ROW_NUM_NAME = "ROWNUM";	
+	final static String ROW_NUM_NAME = "autor2rml_rownum";	
 	final static String BASE_URI = "http://kraken/";
 	
 	private String graph;
