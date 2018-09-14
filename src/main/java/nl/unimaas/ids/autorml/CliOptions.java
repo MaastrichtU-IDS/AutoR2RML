@@ -16,10 +16,10 @@ public class CliOptions {
 	@Option(names= {"-j", "--jdbcurl"}, description = "Connect to drill host", required = true)
 	String jdbcurl = null;
 	
-	@Option(names= {"-un", "--username"}, description = "Username for login if not empty")
+	@Option(names= {"-u", "--username"}, description = "Username for login if not empty")
 	String userName = null;
 	
-	@Option(names= {"-pw", "--password"}, description = "Password for Username")
+	@Option(names= {"-p", "--password"}, description = "Password for Username")
 	String passWord = null;
 	
 	@Option(names = {"-o", "--outputfile"}, description = "Path to the file where the mappings will be stored. If empty, then mappings go to System.out" )

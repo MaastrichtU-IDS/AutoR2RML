@@ -15,6 +15,9 @@ public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 		Class.forName("org.sqlite.JDBC");
 		Class.forName("org.postgresql.Driver");
 		connection = DriverManager.getConnection(jdbcUrl, userName, passWord);
+		// PostgreSQL JDBC driver seems to have autocommit enabled which leads to a
+		// Java HeapSpace Overflow
+		connection.setAutoCommit(false);
 	}
 
 
