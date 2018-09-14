@@ -3,7 +3,7 @@ package nl.unimaas.ids.autorml;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-@Command(name = "autodrill")
+@Command(name = "autor2rml")
 public class CliOptions {
 	
 	@Option(names = { "-?", "--help" }, usageHelp = true, description = "display a help message")

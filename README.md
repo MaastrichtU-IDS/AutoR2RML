@@ -14,8 +14,6 @@ The RDBMS metadata are retrieved using JDBC to build the mapping file. The text 
 
 ## Build
 ```shell
-./build.sh
-# Or directly the Docker command
 docker build -t autor2rml .
 ```
 ## Run
@@ -30,9 +28,6 @@ docker run -it --rm --link drill:drill autor2rml -j "jdbc:drill:drillbit=drill:3
 
 # Mappings to a file
 docker run -it --rm --link drill:drill -v /data:/data autor2rml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -r
-
-# With defined base URI and output Graph URI
-docker run -it --rm --link drill:drill -v /data:/data autor2rml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -g http://kraken/graph/pharmgkb_drugs -b http://kraken/ -r
 ```
 
 #### Using RDBMS
@@ -46,10 +41,10 @@ su postgres
 psql drugcentral < /data/drugcentral.dump.08262018.sql
 
 # Run autor2rml on DB
-docker run -it --rm --link postgres:postgres -v /data:/data autor2rml -j "jdbc:postgresql://postgres:5432/drugcentral" -u postgres -p pwd -g http://kraken/graph/drugcentral -b http://kraken/ -o /data/autor2rml/mapping.ttl
+docker run -it --rm --link postgres:postgres -v /data:/data autor2rml -j "jdbc:postgresql://postgres:5432/drugcentral" -u postgres -p pwd -o /data/autor2rml/mapping.ttl
 
 ## SQLite
-docker run -it --rm -v /data:/data autor2rml -j "jdbc:sqlite:/data/sqlite/chinook.db" -g http://kraken/graph/sqlite -b http://kraken/ -o /data/sqlite/mapping.ttl
+docker run -it --rm -v /data:/data autor2rml -j "jdbc:sqlite:/data/sqlite/chinook.db" -o /data/sqlite/mapping.ttl
 
 ```
 
@@ -75,13 +70,9 @@ autodrill [-?r] [-b=<baseUri>] [-d=<baseDir>] [-g=<outputGraph>]
   -?, --help                Display a help message
   -j, --jdbcurl=<jdbcurl>   Required. The URL for the Jdbc connector. E.g.: jdbc:
                               drill:drillbit=localhost:31010
-  -b, --baseUri=<baseUri>   Base URI used to built the dataset URIs. Default: http:
-                              //kraken/
   -d, --directory=<baseDir> Base directory to scan for structured files with Apache
                               Drill. Needs to be under the dir scanned by Apache
                               Drill running (/data by default)
-  -g, --graph=<outputGraph> URL of the Graph the nquads will belong to. If empty, it
-                              will be generated.
   -o, --outputfile=<outputFilepath>
                             Path to the file where the mappings will be stored. If
                               empty, then mappings go to System.out
