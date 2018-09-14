@@ -77,7 +77,7 @@ public abstract class AbstractMapper implements MapperInterface {
 			return tableName;
 		
 		int i1 = tableName.indexOf("`");
-		int i2 = tableName.indexOf("`", i1);
+		int i2 = tableName.indexOf("`", i1+1);
 		return tableName.substring(i1 + 1, i2 -1);
 	}
 
