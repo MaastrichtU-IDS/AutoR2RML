@@ -129,7 +129,7 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
  	
  	@Override
 	public String getSqlForColumn(String column, int index) {
-		return "columns[" + index + "] as `" + column + "`";
+		return "columns[" + index + "] as `" + getColumnName(column) + "`";
 	}
 
 }
