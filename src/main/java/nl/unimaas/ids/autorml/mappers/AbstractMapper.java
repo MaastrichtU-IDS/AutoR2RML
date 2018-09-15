@@ -57,7 +57,7 @@ public abstract class AbstractMapper implements MapperInterface {
 			lower.println("  rr:graph <" + graph + ">;");
 			lower.println("];");
 		}
-		upper.println("  from\n    " + table + ";");
+		upper.println("  from " + table + ";");
 		upper.println("\"\"\"];");
 
 		lower.println(".");

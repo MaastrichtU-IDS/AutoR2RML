@@ -3,15 +3,12 @@ package nl.unimaas.ids.autorml;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.List;
-
 import nl.unimaas.ids.autorml.mappers.MapperFactory;
 import nl.unimaas.ids.autorml.mappers.MapperInterface;
 import picocli.CommandLine;
 
 public class AutoR2RML {
-	final static String ROW_NUM_NAME = "ROWNUM_PER_FILE";
+	final static String ROW_NUM_NAME = "autor2rml_rownum";
 
 	public static void main(String[] args) throws Exception {
 		try {
