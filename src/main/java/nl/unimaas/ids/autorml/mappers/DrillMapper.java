@@ -119,6 +119,8 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 	
 	@Override
 	public String getColumnName(String column) {
+		// Remove all parenthesis
+		column = column.replaceAll("[()]", " ");
 		return CaseUtils.toCamelCase(column, true, new char[] { '-' });
 	}
 	
