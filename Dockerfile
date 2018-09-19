@@ -12,9 +12,9 @@ COPY . .
 RUN mvn clean install -Dmaven.test.skip=true
 
 RUN mkdir $APP_DIR && \
-    mv target/autodrill-0.0.1-SNAPSHOT-jar-with-dependencies.jar $APP_DIR/autodrill.jar && \
+    mv target/autor2rml-0.0.1-SNAPSHOT-jar-with-dependencies.jar $APP_DIR/autor2rml.jar && \
     rm -rf $TMP_DIR
     
 WORKDIR $APP_DIR
 
-ENTRYPOINT ["java","-jar","autodrill.jar"]
+ENTRYPOINT ["java","-jar","autor2rml.jar"]
