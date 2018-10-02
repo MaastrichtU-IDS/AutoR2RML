@@ -10,8 +10,8 @@ import java.util.List;
 
 public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 
-	public RDBMSMapper(String jdbcUrl, String userName, String passWord) throws SQLException, ClassNotFoundException {
-		super(jdbcUrl, userName, passWord);
+	public RDBMSMapper(String jdbcUrl, String userName, String passWord, String baseUri) throws SQLException, ClassNotFoundException {
+		super(jdbcUrl, userName, passWord, baseUri);
 		Class.forName("org.sqlite.JDBC");
 		Class.forName("org.postgresql.Driver");
 		connection = DriverManager.getConnection(jdbcUrl, userName, passWord);

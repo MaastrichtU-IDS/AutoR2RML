@@ -20,8 +20,8 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 	Connection connection;
 	final static List<String> acceptedFileTypes = Arrays.asList(new String[] { "csv", "tsv", "psv" , "txt"});
 
-	public DrillMapper(String jdbcUrl, String userName, String passWord) throws SQLException, ClassNotFoundException {
-		super(jdbcUrl, userName, passWord);
+	public DrillMapper(String jdbcUrl, String userName, String passWord, String baseUri) throws SQLException, ClassNotFoundException {
+		super(jdbcUrl, userName, passWord, baseUri);
 		Class.forName("org.apache.drill.jdbc.Driver"); 
 		connection = DriverManager.getConnection(jdbcUrl, userName, passWord);
 	}

@@ -6,17 +6,19 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
+
 import nl.unimaas.ids.util.PrefixPrintWriter;
 
 public abstract class AbstractMapper implements MapperInterface {
 	Connection connection;
 	final static String ROW_NUM_NAME = "autor2rml_rownum";	
-	final static String BASE_URI = "http://kraken/";
+	private String baseUri;
 	
 	private String graph;
 	
-	public AbstractMapper(String jdbcUrl, String userName, String passWord) {
-		this.graph = BASE_URI + "graph/" + UUID.randomUUID() + "/"; 
+	public AbstractMapper(String jdbcUrl, String userName, String passWord, String baseUri) {
+		this.graph = baseUri + "graph/" + UUID.randomUUID() + "/"; 
 		
 	}
 	
@@ -41,7 +43,7 @@ public abstract class AbstractMapper implements MapperInterface {
 
 		lower.println("rr:subjectMap [");
 		lower.println("  rr:termType rr:IRI;");
-		lower.println("  rr:template \"" + BASE_URI + cleanTableNameForUri(table) + "/{" + ROW_NUM_NAME + "}\";");
+		lower.println("  rr:template \"" + this.baseUri + cleanTableNameForUri(table) + "/{" + ROW_NUM_NAME + "}\";");
 		lower.println("  rr:graph <" + graph + ">;");
 		lower.println("];");
 
@@ -52,7 +54,7 @@ public abstract class AbstractMapper implements MapperInterface {
 			upper.println("    , " + getSqlForColumn(column, i));
 
 			lower.println("rr:predicateObjectMap [");
-			lower.println("  rr:predicate <" + BASE_URI + "" + cleanTableNameForUri(table) + "/" + getColumnName(column) + ">;");
+			lower.println("  rr:predicate <" + this.baseUri + "" + cleanTableNameForUri(table) + "/" + getColumnName(column) + ">;");
 			lower.println("  rr:objectMap [ rr:column \"" + getColumnName(column) + "\" ];");
 			lower.println("  rr:graph <" + graph + ">;");
 			lower.println("];");
@@ -73,6 +75,7 @@ public abstract class AbstractMapper implements MapperInterface {
 	}
 	
 	private String cleanTableNameForUri(String tableName) {
+		tableName = StringUtils.removeStart(tableName, "/");
 		if(!tableName.contains("`"))
 			return tableName;
 		

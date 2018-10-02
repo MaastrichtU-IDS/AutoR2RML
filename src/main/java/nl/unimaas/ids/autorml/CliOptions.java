@@ -25,6 +25,9 @@ public class CliOptions {
 	@Option(names = {"-o", "--outputfile"}, description = "Path to the file where the mappings will be stored. If empty, then mappings go to System.out" )
 	String outputFilePath = null;
 	
+	@Option(names = {"-b", "--baseuri"}, description = "Base URI used to generate triples. Default: http://data2services/" )
+	String baseUri = "http://data2services/";
+	
 	@Option(names = {"-d", "--directory"}, description = "Base directory to scan for structured files" )
 	String baseDir;
 
