@@ -18,7 +18,7 @@ import nl.unimaas.ids.util.PrefixPrintWriter;
 
 public class DrillMapper extends AbstractMapper implements MapperInterface {
 	Connection connection;
-	final static List<String> acceptedFileTypes = Arrays.asList(new String[] { "csv", "tsv", "psv" });
+	final static List<String> acceptedFileTypes = Arrays.asList(new String[] { "csv", "tsv", "psv" , "txt"});
 
 	public DrillMapper(String jdbcUrl, String userName, String passWord) throws SQLException, ClassNotFoundException {
 		super(jdbcUrl, userName, passWord);
@@ -99,6 +99,7 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		String fileName = null;
 		String filePath = null;
 		boolean isDirectory = false;
+		// TODO: fix the possibility to query directly any given file (for example a .txt file)
 		while (rs.next()) {
 			fileName = rs.getString(1);
 			isDirectory = rs.getBoolean(2);
