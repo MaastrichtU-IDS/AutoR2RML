@@ -18,7 +18,11 @@ public abstract class AbstractMapper implements MapperInterface {
 	private String graph;
 	
 	public AbstractMapper(String jdbcUrl, String userName, String passWord, String baseUri) {
-		this.graph = baseUri + "graph/" + UUID.randomUUID() + "/"; 
+		this.baseUri = baseUri;
+		if (this.baseUri.lastIndexOf("/") != this.baseUri.length()) {
+			this.baseUri = this.baseUri + "/";
+		}
+		this.graph = this.baseUri + "graph/" + UUID.randomUUID() + "/"; 
 		
 	}
 	
