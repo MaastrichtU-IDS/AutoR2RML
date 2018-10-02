@@ -18,7 +18,7 @@ import nl.unimaas.ids.util.PrefixPrintWriter;
 
 public class DrillMapper extends AbstractMapper implements MapperInterface {
 	Connection connection;
-	final static List<String> acceptedFileTypes = Arrays.asList(new String[] { "csv", "tsv", "psv" , "txt"});
+	final static List<String> acceptedFileTypes = Arrays.asList(new String[] { "csv", "tsv", "psv" });
 
 	public DrillMapper(String jdbcUrl, String userName, String passWord, String baseUri) throws SQLException, ClassNotFoundException {
 		super(jdbcUrl, userName, passWord, baseUri);
@@ -99,20 +99,26 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		String fileName = null;
 		String filePath = null;
 		boolean isDirectory = false;
-		// TODO: fix the possibility to query directly any given file (for example a .txt file)
-		while (rs.next()) {
-			fileName = rs.getString(1);
-			isDirectory = rs.getBoolean(2);
-
-			filePath = path + "/" + fileName;
-
-			if (isDirectory && recursive)
-				ret.addAll(getFilesRecursivelyAsList(connection, filePath, true));
-			else if (fileName.contains(".")
-					&& acceptedFileTypes.contains(fileName.substring(fileName.lastIndexOf(".") + 1)))
-				ret.add(filePath);
+		// TODO: do it more properly. Stackoverflow question
+		// If the user pass directly a file
+		if (path.contains(".")
+				&& acceptedFileTypes.contains(path.substring(path.lastIndexOf(".") + 1))) {
+			ret.add(path);
+		} else {
+			while (rs.next()) {
+				fileName = rs.getString(1);
+				isDirectory = rs.getBoolean(2);
+	
+				filePath = path + "/" + fileName;
+	
+				if (isDirectory && recursive)
+					ret.addAll(getFilesRecursivelyAsList(connection, filePath, true));
+				else if (fileName.contains(".")
+						&& acceptedFileTypes.contains(fileName.substring(fileName.lastIndexOf(".") + 1)))
+					ret.add(filePath);
+			}
+			rs.close();
 		}
-		rs.close();
 
 		return ret;
 
