@@ -19,11 +19,11 @@ public abstract class AbstractMapper implements MapperInterface {
 	
 	public AbstractMapper(String jdbcUrl, String userName, String passWord, String baseUri) {
 		this.baseUri = baseUri;
-		if (this.baseUri.lastIndexOf("/") != this.baseUri.length()) {
+		if (this.baseUri.lastIndexOf("/") != this.baseUri.length()-1) {
+			// Add / at end of base URI
 			this.baseUri = this.baseUri + "/";
 		}
 		this.graph = this.baseUri + "graph/" + UUID.randomUUID() + "/"; 
-		
 	}
 	
 	@Override
@@ -79,13 +79,13 @@ public abstract class AbstractMapper implements MapperInterface {
 	}
 	
 	private String cleanTableNameForUri(String tableName) {
-		tableName = StringUtils.removeStart(tableName, "/");
 		if(!tableName.contains("`"))
 			return tableName;
 		
 		int i1 = tableName.indexOf("`");
 		int i2 = tableName.indexOf("`", i1+1);
-		return tableName.substring(i1 + 1, i2 -1);
+		tableName = tableName.substring(i1 + 1, i2);
+		return StringUtils.removeStart(tableName, "/");
 	}
 
 }
