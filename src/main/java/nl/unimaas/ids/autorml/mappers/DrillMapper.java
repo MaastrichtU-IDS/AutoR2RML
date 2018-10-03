@@ -42,7 +42,7 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 			String[] columns = getColumnNames(filePath);
 			printFirstFiveLines(filePath, ps);
 			
-			String table = "dfs.root.`" + filePath + "`";
+			String table = "dfs.root.`" + filePath + "` LIMIT 99999999999999999 OFFSET 1";
 			
 			generateMappingForTable(table, columns, ps, ("Mapping" + count++));
 			
