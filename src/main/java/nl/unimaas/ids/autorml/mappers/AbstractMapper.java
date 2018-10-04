@@ -84,8 +84,7 @@ public abstract class AbstractMapper implements MapperInterface {
 		
 		int i1 = tableName.indexOf("`");
 		int i2 = tableName.indexOf("`", i1+1);
-		tableName = tableName.substring(i1 + 1, i2 - 1);
-		//TODO: fix name tableName = tableName.substring(i1 + 1, i2);
+		tableName = tableName.substring(i1 + 1, i2);
 		return StringUtils.removeStart(tableName, "/");
 	}
 
