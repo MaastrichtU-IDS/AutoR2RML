@@ -41,15 +41,14 @@ public abstract class AbstractMapper implements MapperInterface {
 		PrintWriter upper = new PrefixPrintWriter(ps, prefix);
 		PrintWriter lower = new PrefixPrintWriter(ps, prefix);
 
-
 		upper.println("<#" + label + ">");
 		upper.println("rr:logicalTable [ rr:sqlQuery \"\"\"");
 
 		lower.println("rr:subjectMap [");
 		lower.println("  rr:termType rr:IRI;");
 		lower.println("  rr:template \"" + this.baseUri + cleanTableNameForUri(table) + "/{" + ROW_NUM_NAME + "}\";");
-		lower.println("  rr:class <" + this.baseUri + ">;");
-		lower.println("  rr:graph <" + graph + ">;");
+		lower.println("  rr:class <" + this.baseUri + cleanTableNameForUri(table) + ">;");
+		lower.println("  rr:graph <" + this.graph + ">;");
 		lower.println("];");
 
 		upper.println("  select " + getSqlForRowNum());
@@ -61,7 +60,7 @@ public abstract class AbstractMapper implements MapperInterface {
 			lower.println("rr:predicateObjectMap [");
 			lower.println("  rr:predicate <" + this.baseUri + "" + cleanTableNameForUri(table) + "/" + getColumnName(column) + ">;");
 			lower.println("  rr:objectMap [ rr:column \"" + getColumnName(column) + "\" ];");
-			lower.println("  rr:graph <" + graph + ">;");
+			lower.println("  rr:graph <" + this.graph + ">;");
 			lower.println("];");
 		}
 		upper.println("  from " + table + ";");
