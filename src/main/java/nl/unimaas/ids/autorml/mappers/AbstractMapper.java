@@ -48,6 +48,7 @@ public abstract class AbstractMapper implements MapperInterface {
 		lower.println("rr:subjectMap [");
 		lower.println("  rr:termType rr:IRI;");
 		lower.println("  rr:template \"" + this.baseUri + cleanTableNameForUri(table) + "/{" + ROW_NUM_NAME + "}\";");
+		lower.println("  rr:class <" + this.baseUri + ">;");
 		lower.println("  rr:graph <" + graph + ">;");
 		lower.println("];");
 
