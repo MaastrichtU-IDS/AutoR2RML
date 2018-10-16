@@ -32,15 +32,16 @@ public abstract class AbstractMapper implements MapperInterface {
 			connection.close();
 	}
 	
-	void generateMappingForTable(String table, String[] columns, PrintStream ps, String label) throws Exception {
-		generateMappingForTable(table, columns, ps, label, null);
+	void generateMappingForTable(String table, String typePath, String[] columns, PrintStream ps, String label) throws Exception {
+		generateMappingForTable(table, typePath, columns, ps, label, null);
 	}
 	
 	@SuppressWarnings("resource")
-	void generateMappingForTable(String table, String[] columns, PrintStream ps, String label, String prefix) throws Exception {
+	void generateMappingForTable(String table, String filePath, String[] columns, PrintStream ps, String label, String prefix) throws Exception {
 		PrintWriter upper = new PrefixPrintWriter(ps, prefix);
 		PrintWriter lower = new PrefixPrintWriter(ps, prefix);
-
+		// Remove first /
+		filePath = filePath.startsWith("/") ? filePath.substring(1) : filePath;
 
 		upper.println("<#" + label + ">");
 		upper.println("rr:logicalTable [ rr:sqlQuery \"\"\"");
@@ -48,7 +49,7 @@ public abstract class AbstractMapper implements MapperInterface {
 		lower.println("rr:subjectMap [");
 		lower.println("  rr:termType rr:IRI;");
 		lower.println("  rr:template \"" + this.baseUri + cleanTableNameForUri(table) + "/{" + ROW_NUM_NAME + "}\";");
-		lower.println("  rr:class <" + this.baseUri + ">;");
+		lower.println("  rr:class <" + this.baseUri + filePath + ">;");
 		lower.println("  rr:graph <" + graph + ">;");
 		lower.println("];");
 

@@ -32,7 +32,7 @@ public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 			  columns.add(rs2.getString(4));
 		  
 		  String[] col = (String[]) columns.toArray(new String[0]);
-		  generateMappingForTable(table, col, out, table);
+		  generateMappingForTable(table, baseDir, col, out, table);
 		  
 		}
 		
