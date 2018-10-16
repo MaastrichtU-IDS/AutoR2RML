@@ -44,11 +44,11 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 			
 			String table = "dfs.root.`" + filePath + "`";
 			
-			generateMappingForTable(table, path, columns, ps, ("Mapping" + count++));
+			generateMappingForTable(table, columns, ps, ("Mapping" + count++));
 			
 			for(int i=0; i<columns.length; i++) 
 				columns[i] = "Column" + (i+1);
-			generateMappingForTable(table, path, columns, ps, ("Mapping" + count++), "# ");
+			generateMappingForTable(table, columns, ps, ("Mapping" + count++), "# ");
 		}
 
 	}
