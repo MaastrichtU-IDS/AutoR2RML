@@ -28,6 +28,9 @@ public class CliOptions {
 	@Option(names = {"-b", "--baseuri"}, description = "Base URI used to generate triples. Default: http://data2services/" )
 	String baseUri = "http://data2services/";
 	
+	@Option(names = {"-g", "--graphuri"}, description = "Graph URI for the generated triples. Default: http://data2services/graph/autor2rml" )
+	String graphUri = "http://data2services/graph/autor2rml";
+	
 	@Option(names = {"-d", "--directory"}, description = "Base directory to scan for structured files" )
 	String baseDir;
 

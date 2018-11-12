@@ -4,8 +4,8 @@ import java.sql.SQLException;
 
 public class SQLiteMapper extends RDBMSMapper {
 
-	public SQLiteMapper(String jdbcUrl, String userName, String passWord, String baseUri) throws SQLException, ClassNotFoundException {
-		super(jdbcUrl, userName, passWord, baseUri);
+	public SQLiteMapper(String jdbcUrl, String userName, String passWord, String baseUri, String graphUri) throws SQLException, ClassNotFoundException {
+		super(jdbcUrl, userName, passWord, baseUri, graphUri);
 	}
 	
 	@Override

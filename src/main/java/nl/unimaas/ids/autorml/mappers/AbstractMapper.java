@@ -4,7 +4,6 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,11 +14,10 @@ public abstract class AbstractMapper implements MapperInterface {
 	final static String ROW_NUM_NAME = "autor2rml_rownum";	
 	private String baseUri;
 	
-	private String graph;
+	private String graphUri;
 	
-	public AbstractMapper(String jdbcUrl, String userName, String passWord, String baseUri) {
-		this.baseUri = StringUtils.appendIfMissing(baseUri, "/");
-		this.graph = this.baseUri + "graph/" + UUID.randomUUID() + "/"; 
+	public AbstractMapper(String jdbcUrl, String userName, String passWord, String baseUri, String graphUri) {
+		this.baseUri = StringUtils.appendIfMissing(baseUri, "/"); 
 	}
 	
 	@Override
@@ -44,7 +42,7 @@ public abstract class AbstractMapper implements MapperInterface {
 		lower.println("  rr:termType rr:IRI;");
 		lower.println("  rr:template \"" + this.baseUri + cleanTableNameForUri(table) + "/{" + ROW_NUM_NAME + "}\";");
 		lower.println("  rr:class <" + this.baseUri + cleanTableNameForUri(table) + ">;");
-		lower.println("  rr:graph <" + this.graph + ">;");
+		lower.println("  rr:graph <" + this.graphUri + ">;");
 		lower.println("];");
 
 		upper.println("  select " + getSqlForRowNum());
@@ -56,7 +54,7 @@ public abstract class AbstractMapper implements MapperInterface {
 			lower.println("rr:predicateObjectMap [");
 			lower.println("  rr:predicate <" + this.baseUri + "" + cleanTableNameForUri(table) + "/" + getColumnName(column) + ">;");
 			lower.println("  rr:objectMap [ rr:column \"" + getColumnName(column) + "\" ];");
-			lower.println("  rr:graph <" + this.graph + ">;");
+			lower.println("  rr:graph <" + this.graphUri + ">;");
 			lower.println("];");
 		}
 		upper.println("  from " + table + ";");

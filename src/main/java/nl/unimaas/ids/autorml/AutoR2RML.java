@@ -16,7 +16,7 @@ public class AutoR2RML {
 			if(cli.help) 
 				printUsageAndExit();
 		
-			MapperInterface mapper = MapperFactory.getMapper(cli.jdbcurl, cli.userName, cli.passWord, cli.baseUri);
+			MapperInterface mapper = MapperFactory.getMapper(cli.jdbcurl, cli.userName, cli.passWord, cli.baseUri, cli.graphUri);
 			
 			PrintStream ps = System.out;
 			if(cli.outputFilePath!=null)

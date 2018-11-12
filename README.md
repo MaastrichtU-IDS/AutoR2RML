@@ -27,7 +27,7 @@ docker build -t autor2rml .
 docker run -it --rm --link drill:drill autor2rml -j "jdbc:drill:drillbit=drill:31010" -d /data/pharmgkb_drugs -r
 
 # Mappings to a file
-docker run -it --rm --link drill:drill -v /data:/data autor2rml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -r
+docker run -it --rm --link drill:drill -v /data:/data autor2rml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -b http://data2services/ -g http://data2services/graph/autor2rml -r
 ```
 
 #### Using RDBMS
@@ -64,21 +64,7 @@ jdbc:sqlite:/data/sqlite/GEOmetadb.sqlite
 ### Options
 
 ```shell
-autodrill [-?r] [-b=<baseUri>] [-d=<baseDir>] [-g=<outputGraph>]
-                 -j=<jdbcurl> [-o=<outputFilepath>] [-p=<password>]
-                 [-u=<username>]
-  -?, --help                Display a help message
-  -j, --jdbcurl=<jdbcurl>   Required. The URL for the Jdbc connector. E.g.: jdbc:
-                              drill:drillbit=localhost:31010
-  -d, --directory=<baseDir> Base directory to scan for structured files with Apache
-                              Drill. Needs to be under the dir scanned by Apache
-                              Drill running (/data by default)
-  -o, --outputfile=<outputFilepath>
-                            Path to the file where the mappings will be stored. If
-                              empty, then mappings go to System.out
-  -p, --password=<password> Password for database username, if needed.
-  -r, --recursive           Process subDirectories recursively
-  -u, --username=<username> Username for database login, if needed
+docker run --rm -it autor2rml -?
 ```
 ### IDE run config
 
