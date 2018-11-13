@@ -18,6 +18,7 @@ public abstract class AbstractMapper implements MapperInterface {
 	
 	public AbstractMapper(String jdbcUrl, String userName, String passWord, String baseUri, String graphUri) {
 		this.baseUri = StringUtils.appendIfMissing(baseUri, "/"); 
+		this.graphUri = graphUri;
 	}
 	
 	@Override
