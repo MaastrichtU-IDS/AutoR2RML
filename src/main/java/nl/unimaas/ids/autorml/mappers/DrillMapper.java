@@ -17,7 +17,6 @@ import org.apache.commons.text.CaseUtils;
 import nl.unimaas.ids.util.PrefixPrintWriter;
 
 public class DrillMapper extends AbstractMapper implements MapperInterface {
-	Connection connection;
 	final static List<String> acceptedFileTypes = Arrays.asList(new String[] { "csv", "tsv", "psv" });
 
 	public DrillMapper(String jdbcUrl, String userName, String passWord, String baseUri, String graphUri) throws SQLException, ClassNotFoundException {
