@@ -6,9 +6,12 @@ import picocli.CommandLine.Option;
 @Command(name = "autor2rml")
 public class CliOptions {
 	
-	@Option(names = { "-?", "--help" }, usageHelp = true, description = "display a help message")
+	@Option(names = {"-h", "-?", "--help" }, usageHelp = true, description = "Display a help message")
 	boolean help = false;
-	
+
+	@Option(names = {"--debug"}, description = "Enabling debug mode")
+	boolean debug = false;
+
 	@Option(names= {"-r", "--recursive"}, description = "process subDirectories recursively")
 	boolean recursive = false;
 	
