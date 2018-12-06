@@ -53,7 +53,7 @@ public abstract class AbstractMapper implements MapperInterface {
 			upper.println("    , " + getSqlForColumn(column, i));
 
 			lower.println("rr:predicateObjectMap [");
-			lower.println("  rr:predicate <" + this.baseUri + "" + cleanTableNameForUri(table) + "/" + getColumnName(column) + ">;");
+			lower.println("  rr:predicate <" + this.baseUri + "model/" + getColumnName(column) + ">;");
 			lower.println("  rr:objectMap [ rr:column \"" + getColumnName(column) + "\" ];");
 			lower.println("  rr:graph <" + this.graphUri + ">;");
 			lower.println("];");
