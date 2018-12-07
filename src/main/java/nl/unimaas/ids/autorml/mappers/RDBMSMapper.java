@@ -25,6 +25,10 @@ public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 		
 		generateNamespaces(out);
 		while (rs.next()) {
+		  System.out.println("rs1: " + rs.getString(1));
+		  System.out.println("rs2: " + rs.getString(2));
+		  System.out.println("rs3: " + rs.getString(3));
+		  System.out.println("rs4: " + rs.getString(4));
 		  String table = rs.getString(3);
 		  ResultSet rs2 = md.getColumns(null, null, table, null);
 		  List<String> columns = new ArrayList<>();
