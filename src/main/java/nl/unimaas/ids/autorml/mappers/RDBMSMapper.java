@@ -25,7 +25,12 @@ public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 		
 		generateNamespaces(out);
 		while (rs.next()) {
+		  System.out.println("getTables ResultSet 3 Schema: " + rs.getString(3));
 		  String table = rs.getString(3);
+		  if (rs.getString(2) != null) {
+			  // If schema name returned then we use it for postgresql
+			  table = rs.getString(2) + "." + table; 
+		  }
 		  ResultSet rs2 = md.getColumns(null, null, table, null);
 		  List<String> columns = new ArrayList<>();
 		  while(rs2.next())

@@ -198,6 +198,7 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 	public String getColumnName(String column) {
 		// Remove all parenthesis and capitalize first letter
 		column = column.replaceAll("[()]", " ");
+		column = column.replaceAll("(\\\\r|\\\\n)", "");
 		return CaseUtils.toCamelCase(column, true, new char[] { '-' });
 	}
 	
