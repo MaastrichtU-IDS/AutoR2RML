@@ -1,12 +1,9 @@
 package nl.unimaas.ids;
 
+import java.io.File;
+
 import junit.framework.TestCase;
 import nl.unimaas.ids.autorml.AutoR2RML;
-import nl.unimaas.ids.autorml.mappers.MapperFactory;
-import nl.unimaas.ids.autorml.mappers.MapperInterface;
-
-import javax.validation.constraints.Null;
-import java.io.File;
 
 public class ExcelTest extends TestCase {
 

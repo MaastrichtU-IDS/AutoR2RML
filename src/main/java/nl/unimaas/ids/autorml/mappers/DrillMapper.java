@@ -45,7 +45,7 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 
 		List<String> filePaths = getFilesRecursivelyAsList(connection, path, recursive);
 
-//		int count = 1;
+		//int count = 1;
 
 		generateNamespaces(ps);
 
@@ -79,7 +79,7 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		for (int i = 0; i < columns.length; i++) {
 			columns[i] = "Column" + (i + 1);
 		}
-//		generateMappingForTable(table, columns, ps, ("Mapping" + count++), "# ");
+		//generateMappingForTable(table, columns, ps, ("Mapping" + count++), "# ");
 		return count;
 	}
 
