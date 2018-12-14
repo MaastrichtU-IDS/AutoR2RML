@@ -20,7 +20,7 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 
 	public DrillMapper(String jdbcUrl, String userName, String passWord, String baseUri, String graphUri) throws SQLException, ClassNotFoundException {
 		super(jdbcUrl, userName, passWord, baseUri, graphUri);
-		Class.forName("org.apache.drill.jdbc.Driver"); 
+		Class.forName("org.apache.drill.jdbc.Driver");
 		connection = DriverManager.getConnection(jdbcUrl, userName, passWord);
 	}
 
@@ -32,36 +32,40 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 
 		List<String> filePaths = getFilesRecursivelyAsList(connection, path, recursive);
 
-		int count = 1;
-		
-		generateNamespaces(ps);
-		
-		for (String filePath : filePaths) {
-			System.err.println("Analyzing: " + filePath);
+//		int count = 1;
 
-			// If this is an xlsx
-			if (filePath.endsWith(".xlsx")) {
-				ArrayList<String> fileSheets = xlsxToTSV(new File(filePath));
-				for (String fileSheet : fileSheets) {
-					count = getCount(ps, count, filePath, fileSheet);
+		generateNamespaces(ps);
+
+		for (String filePath : filePaths) {
+			int count = 1;
+			if (!new File(filePath).getName().startsWith("~")) {
+				System.err.println("Analyzing: " + filePath);
+
+				// If this is an xlsx
+				if (filePath.endsWith(".xlsx")) {
+					ArrayList<String> fileSheets = xlsxToTSV(new File(filePath));
+					for (String fileSheet : fileSheets) {
+						System.out.println("Analyzing excel sheet: " + fileSheet);
+						count = getCount(ps, count, fileSheet);
+					}
+				} else {
+					count = getCount(ps, count, filePath);
 				}
-			} else {
-				count = getCount(ps, count, filePath, filePath);
 			}
 		}
-
 	}
 
-	private int getCount(PrintStream ps, int count, String filePath, String fileSheet) throws Exception {
+	private int getCount(PrintStream ps, int count, String fileSheet) throws Exception {
 		String[] columns = getColumnNames(fileSheet);
-		printFirstFiveLines(fileSheet, ps);
+		// printFirstFiveLines(fileSheet, ps);
 
-		String table = "dfs.root.`" + filePath + "`";
+		String table = "dfs.root.`" + fileSheet + "`";
 
 		generateMappingForTable(table, columns, ps, ("Mapping" + count++));
 
-		for (int i = 0; i < columns.length; i++)
+		for (int i = 0; i < columns.length; i++) {
 			columns[i] = "Column" + (i + 1);
+		}
 //		generateMappingForTable(table, columns, ps, ("Mapping" + count++), "# ");
 		return count;
 	}
@@ -86,40 +90,69 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 
 		// TODO skip excel sheets starting with #?
 		while (sheetIterator.hasNext()) {
-			StringBuffer data = new StringBuffer();
+			StringBuilder data = new StringBuilder();
 			Sheet sheet = sheetIterator.next();
 			String sheetName = sheet.getSheetName();
-			if (!sheetName.startsWith("#")) {
-				Iterator<Row> rowIterator = sheet.iterator();
-				while (rowIterator.hasNext()) {
-					Row row = rowIterator.next();
-					Iterator<Cell> cellIterator = row.cellIterator();
-					while (cellIterator.hasNext()) {
-						Cell cell = cellIterator.next();
 
-						switch (cell.getCellType()) {
-							case BOOLEAN:
-								data.append(cell.getBooleanCellValue() + "\t");
-								break;
-							case NUMERIC:
-								data.append(cell.getNumericCellValue() + "\t");
-								break;
-							case STRING:
-								data.append(cell.getStringCellValue() + "\t");
-								break;
-							case BLANK:
-								data.append("" + "\t");
-								break;
-							default:
-								data.append(cell + "\t");
-						}
-					}
-					data.append("\n");
-				}
+			if (!sheetName.startsWith("#")) {
+				// TODO write after each line to the file or if x size is reached
 				File outputFile = new File(xlsxFile + ".sheet_" + sheetName + ".tsv");
 				BufferedWriter bwr = new BufferedWriter(new FileWriter(outputFile));
 				fileSheets.add(outputFile.getAbsolutePath());
-				bwr.write(data.toString());
+
+				boolean header = true;
+				for (Row row : sheet) {
+					String rowData = "";
+					if (row.getLastCellNum() != -1) {
+						for (int j = 0; j < row.getLastCellNum(); j++) {
+							Cell cell = row.getCell(j);
+							// Cannot use standard cell iterator as it skips blank cells
+							if (cell == null) {
+								rowData += "" + "\t";
+							} else {
+								switch (cell.getCellType()) {
+									case BOOLEAN:
+										rowData += cell.getBooleanCellValue() + "\t";
+										break;
+									case NUMERIC:
+										rowData += cell.getNumericCellValue() + "\t";
+										break;
+									case STRING:
+										rowData += cell.getStringCellValue() + "\t";
+										break;
+									case BLANK:
+										rowData += "" + "\t";
+										break;
+									default:
+										rowData += cell + "\t";
+								}
+							}
+						}
+						String check = rowData.trim();
+						if (check.length() > 0) {
+							// Add first column with original excel name
+							if (header) {
+								rowData = "FileOrigin\t" + rowData;
+								header = false;
+							} else {
+								rowData = xlsxFile.getName() + "\t" + rowData;
+							}
+							rowData += "\n";
+							data.append(rowData);
+
+							// Debug printing TODO enable logger
+							if (rowData.trim().length() > 100)
+								System.err.println(row.getLastCellNum() + "\t" + rowData.trim().substring(1,100) + "...");
+							else
+								System.err.println(row.getLastCellNum() + "\t" + rowData.trim());
+
+							// Write per row to file
+							bwr.write(data.toString());
+							data = new StringBuilder();
+						}
+					}
+				}
+
 				bwr.close();
 			}
 		}
@@ -145,18 +178,17 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 	private String[] getColumnNames(String filePath) throws SQLException {
 		Statement st = connection.createStatement();
 		String sql = "select * from dfs.root.`" + filePath + "` limit 1";
-		
+
 		ResultSet rs = st.executeQuery(sql);
 
-		String line = null;
-		if (rs.next()) 
+		String line;
+		if (rs.next())
 			line = rs.getString(1);
 		else
 			throw new InvalidParameterException("File \"" + filePath + "\" seems to be empty" );
-		System.err.println(line);
+//		AutoR2RML.logger.info(line);
 		return line.substring(2, line.length() - 2).split("\",\"");
 	}
-
 
 	private List<String> getFilesRecursivelyAsList(Connection connection, String path, boolean recursive)
 			throws Exception {
@@ -179,9 +211,9 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 			while (rs.next()) {
 				fileName = rs.getString(1);
 				isDirectory = rs.getBoolean(2);
-	
+
 				filePath = path + "/" + fileName;
-	
+
 				if (isDirectory && recursive)
 					ret.addAll(getFilesRecursivelyAsList(connection, filePath, true));
 				else if (fileName.contains(".") && acceptedFileTypes.contains(fileName.substring(fileName.lastIndexOf(".") + 1)))
@@ -189,11 +221,9 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 			}
 			rs.close();
 		}
-
 		return ret;
-
 	}
-	
+
 	@Override
 	public String getColumnName(String column) {
 		// Remove all parenthesis and capitalize first letter
@@ -201,16 +231,16 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		column = column.replaceAll("(\\\\r|\\\\n)", "");
 		return CaseUtils.toCamelCase(column, true, new char[] { '-' });
 	}
-	
- 	@Override
+
+	@Override
 	public String getSqlForRowNum() {
 		return "row_number() over (partition by filename) as " + ROW_NUM_NAME;
 	}
- 	
- 	@Override
+
+	@Override
 	public String getSqlForColumn(String column, int index) {
- 		// Avoid generating triples with empty values
- 		return "NULLIF(trim(columns[" + index + "]), '') as `" + getColumnName(column) + "`";
+		// Avoid generating triples with empty values
+		return "NULLIF(trim(columns[" + index + "]), '') as `" + getColumnName(column) + "`";
 	}
 
 }
