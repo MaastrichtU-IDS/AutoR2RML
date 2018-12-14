@@ -43,39 +43,40 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		if (path.endsWith("/"))
 			path = path.substring(0, path.length() - 1);
 
-		List<String> filePaths = getFilesRecursivelyAsList(connection, path, recursive);
+		List<String> filepaths = getFilesRecursivelyAsList(connection, path, recursive);
 
 		//int count = 1;
 
 		generateNamespaces(ps);
 
-		for (String filePath : filePaths) {
+		for (String filepath : filepaths) {
 			int count = 1;
-			if (!new File(filePath).getName().startsWith("~")) {
-				AutoR2RML.logger.debug("Analyzing: " + filePath);
+			if (!new File(filepath).getName().startsWith("~")) {
+				AutoR2RML.logger.debug("Analyzing: " + filepath);
 
 				// If this is an xlsx
-				if (filePath.endsWith(".xlsx")) {
-					ArrayList<String> fileSheets = xlsxToTSV(new File(filePath));
+				if (filepath.endsWith(".xlsx")) {
+					ArrayList<String> fileSheets = xlsxToTSV(new File(filepath));
 					for (String fileSheet : fileSheets) {
 						AutoR2RML.logger.debug("Analyzing excel sheet: " + fileSheet);
-						count = getCount(ps, count, fileSheet);
+						count = generateMappingForFile(ps, count, fileSheet);
 					}
 				} else {
-					count = getCount(ps, count, filePath);
+					count = generateMappingForFile(ps, count, filepath);
 				}
 			}
 		}
 	}
 
-	private int getCount(PrintStream ps, int count, String fileSheet) throws Exception {
-		String[] columns = getColumnNames(fileSheet);
-		printFirstThreeLines(fileSheet, ps);
+	private int generateMappingForFile(PrintStream ps, int count, String filepath) throws Exception {
+		String[] columns = getColumnNames(filepath);
+		printFirstThreeLines(filepath, ps);
 
-		String table = "dfs.root.`" + fileSheet + "`";
+		String table = "dfs.root.`" + filepath + "`";
 
 		generateMappingForTable(table, columns, ps, ("Mapping" + count++));
 
+		// Generate generic columns name (Column1)
 		for (int i = 0; i < columns.length; i++) {
 			columns[i] = "Column" + (i + 1);
 		}
