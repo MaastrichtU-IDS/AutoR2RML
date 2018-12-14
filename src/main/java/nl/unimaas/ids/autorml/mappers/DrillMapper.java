@@ -96,7 +96,7 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		if (xlsxFile.getName().startsWith("~$"))
 			return fileSheets;
 
-		AutoR2RML.logger.debug("XLSX file detected: " + xlsxFile);
+		AutoR2RML.logger.error("XLSX file detected: " + xlsxFile + ". Converting it to TSV...");
 		Workbook wb = WorkbookFactory.create(new FileInputStream(xlsxFile.getAbsolutePath()));
 		Iterator<Sheet> sheetIterator = wb.sheetIterator();
 

@@ -17,7 +17,6 @@ public class AutoR2RML {
 	public static void main(String[] args) throws Exception {
 		//logger.setLevel(Level.INFO);
 		CliOptions cli = new CliOptions(args);
-		logger.error("Logger test");
 
 		MapperInterface mapper = MapperFactory.getMapper(cli.jdbcurl, cli.userName, cli.passWord, cli.baseUri, cli.graphUri);
 
