@@ -38,7 +38,7 @@ public abstract class AbstractMapper implements MapperInterface {
 
 		upper.println("<#" + label + ">");
 		upper.println("rr:logicalTable [ rr:sqlQuery \"\"\"");
-
+		
 		lower.println("rr:subjectMap [");
 		lower.println("  rr:termType rr:IRI;");
 		lower.println("  rr:template \"" + this.baseUri + cleanTableNameForUri(table) + "/{" + ROW_NUM_NAME + "}\";");

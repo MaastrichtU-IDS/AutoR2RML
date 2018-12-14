@@ -1,19 +1,32 @@
 package nl.unimaas.ids.autorml.mappers;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.security.InvalidParameterException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
-import oadd.org.apache.commons.collections.iterators.ArrayListIterator;
 import org.apache.commons.text.CaseUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+import nl.unimaas.ids.autorml.AutoR2RML;
 import nl.unimaas.ids.util.PrefixPrintWriter;
-import org.apache.poi.ss.usermodel.*;
 
 public class DrillMapper extends AbstractMapper implements MapperInterface {
 	final static List<String> acceptedFileTypes = Arrays.asList(new String[] { "csv", "tsv", "psv","xlsx" });
@@ -39,13 +52,13 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		for (String filePath : filePaths) {
 			int count = 1;
 			if (!new File(filePath).getName().startsWith("~")) {
-				System.err.println("Analyzing: " + filePath);
+				AutoR2RML.logger.debug("Analyzing: " + filePath);
 
 				// If this is an xlsx
 				if (filePath.endsWith(".xlsx")) {
 					ArrayList<String> fileSheets = xlsxToTSV(new File(filePath));
 					for (String fileSheet : fileSheets) {
-						System.out.println("Analyzing excel sheet: " + fileSheet);
+						AutoR2RML.logger.debug("Analyzing excel sheet: " + fileSheet);
 						count = getCount(ps, count, fileSheet);
 					}
 				} else {
@@ -57,7 +70,7 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 
 	private int getCount(PrintStream ps, int count, String fileSheet) throws Exception {
 		String[] columns = getColumnNames(fileSheet);
-		// printFirstFiveLines(fileSheet, ps);
+		printFirstThreeLines(fileSheet, ps);
 
 		String table = "dfs.root.`" + fileSheet + "`";
 
@@ -83,7 +96,7 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		if (xlsxFile.getName().startsWith("~$"))
 			return fileSheets;
 
-		System.err.println("XLSX file detected: " + xlsxFile);
+		AutoR2RML.logger.debug("XLSX file detected: " + xlsxFile);
 		Workbook wb = WorkbookFactory.create(new FileInputStream(xlsxFile.getAbsolutePath()));
 		Iterator<Sheet> sheetIterator = wb.sheetIterator();
 
@@ -141,10 +154,10 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 							data.append(rowData);
 
 							// Debug printing TODO enable logger
-							if (rowData.trim().length() > 100)
+							/*if (rowData.trim().length() > 100)
 								System.err.println(row.getLastCellNum() + "\t" + rowData.trim().substring(1,100) + "...");
 							else
-								System.err.println(row.getLastCellNum() + "\t" + rowData.trim());
+								System.err.println(row.getLastCellNum() + "\t" + rowData.trim());*/
 
 							// Write per row to file
 							bwr.write(data.toString());
@@ -161,9 +174,9 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 
 
 	@SuppressWarnings("resource")
-	private void printFirstFiveLines(String filePath, PrintStream ps) throws SQLException {
+	private void printFirstThreeLines(String filePath, PrintStream ps) throws SQLException {
 		Statement st = connection.createStatement();
-		String sql = "select * from dfs.root.`" + filePath + "` limit 5";
+		String sql = "select * from dfs.root.`" + filePath + "` limit 3";
 		
 		PrintWriter pw = new PrefixPrintWriter(ps, "# ");
 		
