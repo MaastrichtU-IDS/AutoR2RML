@@ -45,11 +45,13 @@ public abstract class AbstractMapper implements MapperInterface {
 		lower.println("  rr:class <" + this.baseUri + cleanTableNameForUri(table) + ">;");
 		lower.println("  rr:graph <" + this.graphUri + ">;");
 		lower.println("];");
+		
+		System.out.println("before col loop");
 
 		upper.println("  select " + getSqlForRowNum());
 		for (int i = 0; i < columns.length; i++) {
 			String column = columns[i];
-
+			System.out.println("in loop");
 			upper.println("    , " + getSqlForColumn(column, i));
 
 			lower.println("rr:predicateObjectMap [");
@@ -60,13 +62,13 @@ public abstract class AbstractMapper implements MapperInterface {
 		}
 		upper.println("  from " + table + ";");
 		upper.println("\"\"\"];");
+		System.out.println("end loop");
 
 		lower.println(".");
 		lower.println("\n");
 
 		upper.flush();
 		lower.flush();
-
 	}
 	
 	void generateNamespaces(PrintStream ps) {
