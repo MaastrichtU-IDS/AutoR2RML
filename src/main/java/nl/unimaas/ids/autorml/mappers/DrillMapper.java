@@ -45,12 +45,11 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 
 		List<String> filepaths = getFilesRecursivelyAsList(connection, path, recursive);
 
-		//int count = 1;
+		int count = 1;
 
 		generateNamespaces(ps);
 
 		for (String filepath : filepaths) {
-			int count = 1;
 			if (!new File(filepath).getName().startsWith("~")) {
 				AutoR2RML.logger.debug("Analyzing: " + filepath);
 
