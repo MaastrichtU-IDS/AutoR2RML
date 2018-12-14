@@ -10,16 +10,25 @@ import java.io.File;
 
 public class ExcelTest extends TestCase {
 
-    public void testHelp() throws Throwable {
-        // Inject the file into Apache Drill
-        // Config of DRILL
-//        MapperInterface mapper = MapperFactory.getMapper("jdbc:drill:drillbit=localhost:31010", null, null, "http://example.com", "http://wur.nl");
-//        mapper.generateMapping(System.out, false, "/data/");
-        // Run R2RML to convert whatever is in there to RDF
+    public void testExcel() throws Throwable {
 
         if (new File("/data/").exists()) {
+            AutoR2RML.main(new String[]{"--jdbcurl", "jdbc:drill:drillbit=localhost:31010", "-d", "/data/", "--baseuri", "http://wur.nl/", "--outputfile", "dev1.trig"}); // , "--debug"
+        }
+    }
 
-            AutoR2RML.main(new String[]{"--jdbcurl", "jdbc:drill:drillbit=localhost:31010", "-d", "/data/"});
+    public void testHelp() throws Throwable {
+        AutoR2RML.main(new String[]{"--help"});
+    }
+
+    // TODO identify where /data/config.properties comes from
+    public void testTSV() throws Exception {
+        String filePath = "/data/";
+        if (new File(filePath).exists()) {
+            AutoR2RML.main(new String[]{"--jdbcurl", "jdbc:drill:drillbit=localhost:31010", "-d", filePath, "--baseuri", "http://wur.nl/", "--outputfile", "/data/mapping.ttl"}); // , "--debug" "--outputfile", "mapping.ttl"
+            String command = "docker run -dit --rm -p 8047:8047 -p 31010:31010 --name drill -v /data:/data:ro apache-drill\n" +
+                    "docker run -it --rm --link drill:drill -v /data:/data r2rml /data/config.properties\n";
+            System.err.println("Execute:\n" + command);
         }
     }
 }
