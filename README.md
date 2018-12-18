@@ -77,3 +77,20 @@ nl.unimaas.ids.autor2rml.autor2rml
 # Program arguments for Drill
 -j "jdbc:drill:drillbit=localhost:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -r
 ```
+
+
+
+## Run tests
+
+Work in progress.
+
+- Files in `/src/test/resources/` needs to be in `/data/data2services-tests` at the moment to query it with Apache Drill
+- Apache Drill needs to be running on `/data` 
+
+```shell
+docker run -dit --rm -p 8047:8047 -p 31010:31010 --name drill -v /data:/data:ro apache-drill
+
+mvn test
+```
+
+Trying to use [docker-compose-rule](https://github.com/palantir/docker-compose-rule) to start the docker container at the start of the tests.
