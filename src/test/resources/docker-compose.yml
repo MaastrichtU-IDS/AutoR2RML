@@ -1,0 +1,11 @@
+version: '2'
+services:
+  drill:
+    build: https://github.com/vemonet/apache-drill.git
+    image: drill-test
+    ports: 
+      - "8047:8047"
+      - "31010:31010"
+    container_name: drill
+    volumes:
+      - /data:/data:ro

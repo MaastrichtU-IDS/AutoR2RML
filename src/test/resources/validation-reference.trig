@@ -1,0 +1,36 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#>.
+# ["id","name","date"]
+# ["1","Paris","1968"]
+# ["2","Tiananmen Square","05-06-1989"]
+<#Mapping1>
+rr:logicalTable [ rr:sqlQuery """
+  select row_number() over (partition by filename) as autor2rml_rownum
+    , NULLIF(trim(columns[0]), '') as `Id`
+    , NULLIF(trim(columns[1]), '') as `Name`
+    , NULLIF(trim(columns[2]), '') as `Date`
+  from dfs.root.`/data/data2services-tests/validation-basic_test.tsv`;
+"""];
+rr:subjectMap [
+  rr:termType rr:IRI;
+  rr:template "http://test/data/data2services-tests/validation-basic_test.tsv/{autor2rml_rownum}";
+  rr:class <http://test/data/data2services-tests/validation-basic_test.tsv>;
+  rr:graph <http://graph/test>;
+];
+rr:predicateObjectMap [
+  rr:predicate <http://test/model/Id>;
+  rr:objectMap [ rr:column "Id" ];
+  rr:graph <http://graph/test>;
+];
+rr:predicateObjectMap [
+  rr:predicate <http://test/model/Name>;
+  rr:objectMap [ rr:column "Name" ];
+  rr:graph <http://graph/test>;
+];
+rr:predicateObjectMap [
+  rr:predicate <http://test/model/Date>;
+  rr:objectMap [ rr:column "Date" ];
+  rr:graph <http://graph/test>;
+];
+.
+
+
