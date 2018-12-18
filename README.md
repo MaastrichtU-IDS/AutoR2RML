@@ -26,10 +26,10 @@ docker build -t autor2rml .
 
 ```shell
 # Mappings to System.out
-docker run -it --rm --link drill:drill autor2rml -j "jdbc:drill:drillbit=drill:31010" -d /data/pharmgkb_drugs -r
+docker run -it --rm --link drill:drill autor2rml -j "jdbc:drill:drillbit=drill:31010" -d /data/data2services -r
 
 # Mappings to a file
-docker run -it --rm --link drill:drill -v /data:/data autor2rml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -b http://data2services/ -g http://data2services/graph/autor2rml -r
+docker run -it --rm --link drill:drill -v /data:/data autor2rml -j "jdbc:drill:drillbit=drill:31010" -o /data/data2services/mapping.ttl -d /data/data2services -b http://data2services/ -g http://data2services/graph/autor2rml -r
 ```
 
 #### Using RDBMS
@@ -37,16 +37,16 @@ docker run -it --rm --link drill:drill -v /data:/data autor2rml -j "jdbc:drill:d
 ```shell
 ## Postgres (run docker)
 # Run and load Postgres DB
-docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=pwd -d -v /data/autor2rml/:/data postgres
+docker run --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=pwd -d -v /data/data2services/:/data postgres
 docker exec -it postgres bash
 su postgres
 psql drugcentral < /data/drugcentral.dump.08262018.sql
 
 # Run autor2rml on DB
-docker run -it --rm --link postgres:postgres -v /data:/data autor2rml -j "jdbc:postgresql://postgres:5432/drugcentral" -u postgres -p pwd -o /data/autor2rml/mapping.ttl
+docker run -it --rm --link postgres:postgres -v /data:/data autor2rml -j "jdbc:postgresql://postgres:5432/drugcentral" -u postgres -p pwd -o /data/data2services/mapping.ttl
 
 ## SQLite
-docker run -it --rm -v /data:/data autor2rml -j "jdbc:sqlite:/data/sqlite/chinook.db" -o /data/sqlite/mapping.ttl
+docker run -it --rm -v /data:/data autor2rml -j "jdbc:sqlite:/data/sqlite/chinook.db" -o /data/data2services/mapping.ttl
 
 ```
 
@@ -60,7 +60,7 @@ jdbc:drill:drillbit=localhost:31010
 jdbc:postgresql://localhost:5432/database
 
 # For SQLite
-jdbc:sqlite:/data/sqlite/GEOmetadb.sqlite
+jdbc:sqlite:/data/data2services/GEOmetadb.sqlite
 ```
 
 ### Options
@@ -75,7 +75,7 @@ docker run --rm -it autor2rml -?
 nl.unimaas.ids.autor2rml.autor2rml
 
 # Program arguments for Drill
--j "jdbc:drill:drillbit=localhost:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -r
+-j "jdbc:drill:drillbit=localhost:31010" -o /data/data2services/mapping.ttl -d /data/data2services -r
 ```
 
 
