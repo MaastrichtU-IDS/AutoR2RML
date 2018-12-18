@@ -5,7 +5,8 @@ import java.io.File;
 import junit.framework.TestCase;
 import nl.unimaas.ids.autorml.AutoR2RML;
 
-public class ExcelTest extends TestCase {
+//public class ExcelTest extends TestCase {
+public class ExcelTest {
 
     public void testExcel() throws Throwable {
 
