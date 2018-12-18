@@ -6,10 +6,7 @@ import java.io.PrintStream;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.BeforeClass;
-import org.junit.ClassRule;
 import org.junit.Test;
-
-import com.palantir.docker.compose.DockerComposeRule;
 
 import junitx.framework.FileAssert;
 import nl.unimaas.ids.autorml.mappers.MapperFactory;
@@ -21,11 +18,12 @@ public class TestR2RMLDrill {
 	private static String connectionURL = "jdbc:drill:drillbit=localhost:31010";
 	private static MapperInterface mapper;
 	
-	// Not working. Try to start Apache Drill Docker at start of test
+	/* Not working. Try to start Apache Drill Docker at start of test
 	@ClassRule
     public static DockerComposeRule docker = DockerComposeRule.builder()
             .file("src/test/resources/docker-compose.yml")
             .build();
+	*/
 	
 	// Get mapper before running tests
 	@BeforeClass
