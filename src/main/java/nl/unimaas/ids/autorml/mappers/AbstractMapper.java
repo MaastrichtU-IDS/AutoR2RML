@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import org.apache.commons.lang3.StringUtils;
 
+import nl.unimaas.ids.autorml.AutoR2RML;
 import nl.unimaas.ids.util.PrefixPrintWriter;
 
 public abstract class AbstractMapper implements MapperInterface {
@@ -46,12 +47,13 @@ public abstract class AbstractMapper implements MapperInterface {
 		lower.println("  rr:graph <" + this.graphUri + ">;");
 		lower.println("];");
 		
-		System.out.println("before col loop");
+		// Debug for TSV have more than 90 columns: https://github.com/MaastrichtU-IDS/data2services-pipeline/issues/25
+		AutoR2RML.logger.error("before col loop");
 
 		upper.println("  select " + getSqlForRowNum());
 		for (int i = 0; i < columns.length; i++) {
 			String column = columns[i];
-			System.out.println("in loop");
+			AutoR2RML.logger.error("in loop");
 			upper.println("    , " + getSqlForColumn(column, i));
 
 			lower.println("rr:predicateObjectMap [");
@@ -62,7 +64,7 @@ public abstract class AbstractMapper implements MapperInterface {
 		}
 		upper.println("  from " + table + ";");
 		upper.println("\"\"\"];");
-		System.out.println("end loop");
+		AutoR2RML.logger.error("end loop");
 
 		lower.println(".");
 		lower.println("\n");
