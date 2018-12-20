@@ -14,6 +14,7 @@ public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 		super(jdbcUrl, userName, passWord, baseUri, graphUri);
 		Class.forName("org.sqlite.JDBC");
 		Class.forName("org.postgresql.Driver");
+		Class.forName("org.mariadb.jdbc.Driver");
 		connection = DriverManager.getConnection(jdbcUrl, userName, passWord);
 	}
 
