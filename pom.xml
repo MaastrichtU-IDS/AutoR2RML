@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>org.apache.drill.exec</groupId>
 			<artifactId>drill-jdbc-all</artifactId>
-			<version>1.13.0</version>
+			<version>1.15.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -78,7 +78,15 @@
 			<artifactId>poi-ooxml</artifactId>
 			<version>4.0.1</version>
 		</dependency>
-		
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-compress -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-compress</artifactId>
+			<version>1.18</version>
+		</dependency>
+
+
+
 		<!-- To start Docker compose at start of tests -->
 		<dependency>
 	        <groupId>com.palantir.docker.compose</groupId>
