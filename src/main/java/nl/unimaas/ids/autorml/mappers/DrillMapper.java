@@ -96,8 +96,8 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		if (xlsxFile.getName().startsWith("~$"))
 			return fileSheets;
 
-		AutoR2RML.logger.error("XLSX file detected: " + xlsxFile + ". Converting it to TSV...");
-		Workbook wb = WorkbookFactory.create(new FileInputStream(xlsxFile.getAbsolutePath()));
+		AutoR2RML.logger.error("XLSX file detected: " + xlsxFile.getAbsolutePath() + ". Converting it to TSV...");
+		Workbook wb = WorkbookFactory.create(xlsxFile);
 		Iterator<Sheet> sheetIterator = wb.sheetIterator();
 
 
@@ -114,58 +114,60 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 				fileSheets.add(outputFile.getAbsolutePath());
 
 				boolean header = true;
+                AutoR2RML.logger.info("Parsing sheet: " + sheet.getSheetName());
 				for (Row row : sheet) {
-					String rowData = "";
-					if (row.getLastCellNum() != -1) {
-						for (int j = 0; j < row.getLastCellNum(); j++) {
-							Cell cell = row.getCell(j);
-							// Cannot use standard cell iterator as it skips blank cells
-							if (cell == null) {
-								rowData += "" + "\t";
-							} else {
-								switch (cell.getCellType()) {
-									case BOOLEAN:
-										rowData += cell.getBooleanCellValue() + "\t";
-										break;
-									case NUMERIC:
-										rowData += cell.getNumericCellValue() + "\t";
-										break;
-									case STRING:
-										rowData += cell.getStringCellValue() + "\t";
-										break;
-									case BLANK:
-										rowData += "" + "\t";
-										break;
-									default:
-										rowData += cell + "\t";
+                    if (row.getCell(0) != null && !row.getCell(0).getStringCellValue().startsWith("#")) {
+						String rowData = "";
+						if (row.getLastCellNum() != -1) {
+							for (int j = 0; j < row.getLastCellNum(); j++) {
+								Cell cell = row.getCell(j);
+								// Cannot use standard cell iterator as it skips blank cells
+								if (cell == null) {
+									rowData += "" + "\t";
+								} else {
+									switch (cell.getCellType()) {
+										case BOOLEAN:
+											rowData += cell.getBooleanCellValue() + "\t";
+											break;
+										case NUMERIC:
+											rowData += cell.getNumericCellValue() + "\t";
+											break;
+										case STRING:
+											rowData += cell.getStringCellValue() + "\t";
+											break;
+										case BLANK:
+											rowData += "" + "\t";
+											break;
+										default:
+											rowData += cell + "\t";
+									}
 								}
 							}
-						}
-						String check = rowData.trim();
-						if (check.length() > 0) {
-							// Add first column with original excel name
-							if (header) {
-								rowData = "FileOrigin\t" + rowData;
-								header = false;
-							} else {
-								rowData = xlsxFile.getName() + "\t" + rowData;
-							}
-							rowData += "\n";
-							data.append(rowData);
+							String check = rowData.trim();
+							if (check.length() > 0) {
+								// Add first column with original excel name
+								if (header) {
+									rowData = "FileOrigin\t" + rowData;
+									header = false;
+								} else {
+									rowData = xlsxFile.getName() + "\t" + rowData;
+								}
+								rowData += "\n";
+								data.append(rowData);
 
-							// Debug printing TODO enable logger
+								// Debug printing TODO enable logger
 							/*if (rowData.trim().length() > 100)
 								System.err.println(row.getLastCellNum() + "\t" + rowData.trim().substring(1,100) + "...");
 							else
 								System.err.println(row.getLastCellNum() + "\t" + rowData.trim());*/
 
-							// Write per row to file
-							bwr.write(data.toString());
-							data = new StringBuilder();
+								// Write per row to file
+								bwr.write(data.toString());
+								data = new StringBuilder();
+							}
 						}
 					}
 				}
-
 				bwr.close();
 			}
 		}
@@ -177,9 +179,9 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 	private void printFirstThreeLines(String filePath, PrintStream ps) throws SQLException {
 		Statement st = connection.createStatement();
 		String sql = "select * from dfs.root.`" + filePath + "` limit 3";
-		
+
 		PrintWriter pw = new PrefixPrintWriter(ps, "# ");
-		
+
 		ResultSet rs = st.executeQuery(sql);
 		while (rs.next()) {
 			pw.println(rs.getString(1));
