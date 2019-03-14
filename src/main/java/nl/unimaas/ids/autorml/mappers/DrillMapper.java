@@ -133,7 +133,7 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 											rowData += cell.getNumericCellValue() + "\t";
 											break;
 										case STRING:
-											rowData += cell.getStringCellValue() + "\t";
+											rowData += cell.getStringCellValue().trim() + "\t";
 											break;
 										case BLANK:
 											rowData += "" + "\t";
