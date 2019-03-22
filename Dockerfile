@@ -7,11 +7,13 @@ ENV TMP_DIR /tmp/build
 
 WORKDIR $TMP_DIR
 
-COPY . .
+# Only runs if pom.xml changes. To avoid downloading dependencies everytime.
+COPY pom.xml .
+RUN mvn verify clean --fail-never
 
-RUN mvn clean install -Dmaven.test.skip=true
-
-RUN mkdir $APP_DIR && \
+COPY src/ ./src/
+RUN mvn package -Dmaven.test.skip=true && \
+    mkdir $APP_DIR && \
     mv target/autor2rml-0.0.1-SNAPSHOT-jar-with-dependencies.jar $APP_DIR/autor2rml.jar && \
     rm -rf $TMP_DIR
     
