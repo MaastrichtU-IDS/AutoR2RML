@@ -38,6 +38,11 @@
 			<artifactId>sqlite-jdbc</artifactId>
 			<version>3.23.1</version><!--$NO-MVN-MAN-VER$-->
 		</dependency>
+		<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>8.0.13</version>
+		</dependency>
 				
 		
 		<dependency>

@@ -16,9 +16,16 @@ public abstract class AbstractMapper implements MapperInterface {
 	
 	private String graphUri;
 	
+	private String mysqlSupport = "";
+	
 	public AbstractMapper(String jdbcUrl, String userName, String passWord, String baseUri, String graphUri) {
 		this.baseUri = StringUtils.appendIfMissing(baseUri, "/"); 
 		this.graphUri = graphUri;
+		
+		if(jdbcUrl.contains("mysql")){
+			mysqlSupport = " ,(SELECT @row_number:=0) AS t";
+		}
+		
 	}
 	
 	@Override
@@ -60,7 +67,7 @@ public abstract class AbstractMapper implements MapperInterface {
 			lower.println("  rr:graph <" + this.graphUri + ">;");
 			lower.println("];");
 		}
-		upper.println("  from " + table + ";");
+		upper.println("  from " + table + mysqlSupport + ";");
 		upper.println("\"\"\"];");
 		System.out.println("end loop");
 
