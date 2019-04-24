@@ -115,11 +115,10 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 
 				boolean header = true;
 				for (Row row : sheet) {
-					// Skipps empty rows and skips rows starting with a comment sign (#)
+					// Skips empty rows and skips rows starting with a comment sign (#)
 					if (row.getCell(0) != null && !row.getCell(0).getStringCellValue().startsWith("#")) {
 						String rowData = "";
 						if (row.getLastCellNum() != -1) {
-							// Skipp specific rows? starting with #?
 							for (int j = 0; j < row.getLastCellNum(); j++) {
 								Cell cell = row.getCell(j);
 								// Cannot use standard cell iterator as it skips blank cells
@@ -155,12 +154,6 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 								}
 								rowData += "\n";
 								data.append(rowData);
-
-								// Debug printing TODO enable logger
-							/*if (rowData.trim().length() > 100)
-								System.err.println(row.getLastCellNum() + "\t" + rowData.trim().substring(1,100) + "...");
-							else
-								System.err.println(row.getLastCellNum() + "\t" + rowData.trim());*/
 
 								// Write per row to file
 								bwr.write(data.toString());
