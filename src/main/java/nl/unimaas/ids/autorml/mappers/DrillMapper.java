@@ -19,11 +19,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.text.CaseUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.ss.usermodel.*;
 
 import nl.unimaas.ids.autorml.AutoR2RML;
 import nl.unimaas.ids.util.PrefixPrintWriter;
@@ -96,12 +93,12 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		if (xlsxFile.getName().startsWith("~$"))
 			return fileSheets;
 
-		AutoR2RML.logger.error("XLSX file detected: " + xlsxFile + ". Converting it to TSV...");
+		AutoR2RML.logger.info("XLSX file detected: " + xlsxFile + ". Converting it to TSV...");
 		Workbook wb = WorkbookFactory.create(new FileInputStream(xlsxFile.getAbsolutePath()));
 		Iterator<Sheet> sheetIterator = wb.sheetIterator();
 
 
-		// TODO skip excel sheets starting with #?
+		// Skip excel sheets starting with #
 		while (sheetIterator.hasNext()) {
 			StringBuilder data = new StringBuilder();
 			Sheet sheet = sheetIterator.next();
@@ -114,58 +111,61 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 				fileSheets.add(outputFile.getAbsolutePath());
 
 				boolean header = true;
+                AutoR2RML.logger.info("Parsing sheet: " + sheet.getSheetName());
 				for (Row row : sheet) {
-					String rowData = "";
-					if (row.getLastCellNum() != -1) {
-						for (int j = 0; j < row.getLastCellNum(); j++) {
-							Cell cell = row.getCell(j);
-							// Cannot use standard cell iterator as it skips blank cells
-							if (cell == null) {
-								rowData += "" + "\t";
-							} else {
-								switch (cell.getCellType()) {
-									case BOOLEAN:
-										rowData += cell.getBooleanCellValue() + "\t";
-										break;
-									case NUMERIC:
-										rowData += cell.getNumericCellValue() + "\t";
-										break;
-									case STRING:
-										rowData += cell.getStringCellValue() + "\t";
-										break;
-									case BLANK:
-										rowData += "" + "\t";
-										break;
-									default:
-										rowData += cell + "\t";
+					// Skips empty rows and skips rows starting with a comment sign (#)
+					if (row.getCell(0) != null && !row.getCell(0).getStringCellValue().startsWith("#")) {
+						String rowData = "";
+						if (row.getLastCellNum() != -1) {
+							for (int j = 0; j < row.getLastCellNum(); j++) {
+								Cell cell = row.getCell(j);
+								// Cannot use standard cell iterator as it skips blank cells
+								if (cell == null) {
+									rowData += "" + "\t";
+								} else {
+									switch (cell.getCellType()) {
+										case BOOLEAN:
+											rowData += cell.getBooleanCellValue() + "\t";
+											break;
+										case NUMERIC:
+											if (HSSFDateUtil.isCellDateFormatted(cell)) {
+												DataFormatter dataFormatter = new DataFormatter();
+												String cellStringValue = dataFormatter.formatCellValue(cell);
+												rowData += cellStringValue + "\t";
+											} else {
+												rowData += cell.getNumericCellValue() + "\t";
+											}
+											break;
+										case STRING:
+											rowData += cell.getStringCellValue().trim() + "\t";
+											break;
+										case BLANK:
+											rowData += "" + "\t";
+											break;
+										default:
+											rowData += cell + "\t";
+									}
 								}
 							}
-						}
-						String check = rowData.trim();
-						if (check.length() > 0) {
-							// Add first column with original excel name
-							if (header) {
-								rowData = "FileOrigin\t" + rowData;
-								header = false;
-							} else {
-								rowData = xlsxFile.getName() + "\t" + rowData;
+							String check = rowData.trim();
+							if (check.length() > 0) {
+								// Add first column with original excel name
+								if (header) {
+									rowData = "FileOrigin\t" + rowData;
+									header = false;
+								} else {
+									rowData = xlsxFile.getName() + "\t" + rowData;
+								}
+								rowData += "\n";
+								data.append(rowData);
+
+								// Write per row to file
+								bwr.write(data.toString());
+								data = new StringBuilder();
 							}
-							rowData += "\n";
-							data.append(rowData);
-
-							// Debug printing TODO enable logger
-							/*if (rowData.trim().length() > 100)
-								System.err.println(row.getLastCellNum() + "\t" + rowData.trim().substring(1,100) + "...");
-							else
-								System.err.println(row.getLastCellNum() + "\t" + rowData.trim());*/
-
-							// Write per row to file
-							bwr.write(data.toString());
-							data = new StringBuilder();
 						}
 					}
 				}
-
 				bwr.close();
 			}
 		}
@@ -177,9 +177,9 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 	private void printFirstThreeLines(String filePath, PrintStream ps) throws SQLException {
 		Statement st = connection.createStatement();
 		String sql = "select * from dfs.root.`" + filePath + "` limit 3";
-		
+
 		PrintWriter pw = new PrefixPrintWriter(ps, "# ");
-		
+
 		ResultSet rs = st.executeQuery(sql);
 		while (rs.next()) {
 			pw.println(rs.getString(1));
