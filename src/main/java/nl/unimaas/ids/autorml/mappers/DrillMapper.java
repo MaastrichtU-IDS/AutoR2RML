@@ -96,12 +96,12 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		if (xlsxFile.getName().startsWith("~$"))
 			return fileSheets;
 
-		AutoR2RML.logger.error("XLSX file detected: " + xlsxFile + ". Converting it to TSV...");
+		AutoR2RML.logger.info("XLSX file detected: " + xlsxFile + ". Converting it to TSV...");
 		Workbook wb = WorkbookFactory.create(new FileInputStream(xlsxFile.getAbsolutePath()));
 		Iterator<Sheet> sheetIterator = wb.sheetIterator();
 
 
-		// TODO skip excel sheets starting with #?
+		// Skip excel sheets starting with #
 		while (sheetIterator.hasNext()) {
 			StringBuilder data = new StringBuilder();
 			Sheet sheet = sheetIterator.next();
@@ -115,57 +115,60 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 
 				boolean header = true;
 				for (Row row : sheet) {
-					String rowData = "";
-					if (row.getLastCellNum() != -1) {
-						for (int j = 0; j < row.getLastCellNum(); j++) {
-							Cell cell = row.getCell(j);
-							// Cannot use standard cell iterator as it skips blank cells
-							if (cell == null) {
-								rowData += "" + "\t";
-							} else {
-								switch (cell.getCellType()) {
-									case BOOLEAN:
-										rowData += cell.getBooleanCellValue() + "\t";
-										break;
-									case NUMERIC:
-										rowData += cell.getNumericCellValue() + "\t";
-										break;
-									case STRING:
-										rowData += cell.getStringCellValue() + "\t";
-										break;
-									case BLANK:
-										rowData += "" + "\t";
-										break;
-									default:
-										rowData += cell + "\t";
+					// Skipps empty rows and skips rows starting with a comment sign (#)
+					if (row.getCell(0) != null && !row.getCell(0).getStringCellValue().startsWith("#")) {
+						String rowData = "";
+						if (row.getLastCellNum() != -1) {
+							// Skipp specific rows? starting with #?
+							for (int j = 0; j < row.getLastCellNum(); j++) {
+								Cell cell = row.getCell(j);
+								// Cannot use standard cell iterator as it skips blank cells
+								if (cell == null) {
+									rowData += "" + "\t";
+								} else {
+									switch (cell.getCellType()) {
+										case BOOLEAN:
+											rowData += cell.getBooleanCellValue() + "\t";
+											break;
+										case NUMERIC:
+											rowData += cell.getNumericCellValue() + "\t";
+											break;
+										case STRING:
+											rowData += cell.getStringCellValue() + "\t";
+											break;
+										case BLANK:
+											rowData += "" + "\t";
+											break;
+										default:
+											rowData += cell + "\t";
+									}
 								}
 							}
-						}
-						String check = rowData.trim();
-						if (check.length() > 0) {
-							// Add first column with original excel name
-							if (header) {
-								rowData = "FileOrigin\t" + rowData;
-								header = false;
-							} else {
-								rowData = xlsxFile.getName() + "\t" + rowData;
-							}
-							rowData += "\n";
-							data.append(rowData);
+							String check = rowData.trim();
+							if (check.length() > 0) {
+								// Add first column with original excel name
+								if (header) {
+									rowData = "FileOrigin\t" + rowData;
+									header = false;
+								} else {
+									rowData = xlsxFile.getName() + "\t" + rowData;
+								}
+								rowData += "\n";
+								data.append(rowData);
 
-							// Debug printing TODO enable logger
+								// Debug printing TODO enable logger
 							/*if (rowData.trim().length() > 100)
 								System.err.println(row.getLastCellNum() + "\t" + rowData.trim().substring(1,100) + "...");
 							else
 								System.err.println(row.getLastCellNum() + "\t" + rowData.trim());*/
 
-							// Write per row to file
-							bwr.write(data.toString());
-							data = new StringBuilder();
+								// Write per row to file
+								bwr.write(data.toString());
+								data = new StringBuilder();
+							}
 						}
 					}
 				}
-
 				bwr.close();
 			}
 		}
