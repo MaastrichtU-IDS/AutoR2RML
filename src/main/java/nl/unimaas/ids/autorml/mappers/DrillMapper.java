@@ -19,11 +19,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.text.CaseUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.ss.usermodel.*;
 
 import nl.unimaas.ids.autorml.AutoR2RML;
 import nl.unimaas.ids.util.PrefixPrintWriter;
@@ -114,6 +111,7 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 				fileSheets.add(outputFile.getAbsolutePath());
 
 				boolean header = true;
+                AutoR2RML.logger.info("Parsing sheet: " + sheet.getSheetName());
 				for (Row row : sheet) {
 					// Skips empty rows and skips rows starting with a comment sign (#)
 					if (row.getCell(0) != null && !row.getCell(0).getStringCellValue().startsWith("#")) {
@@ -130,10 +128,16 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 											rowData += cell.getBooleanCellValue() + "\t";
 											break;
 										case NUMERIC:
-											rowData += cell.getNumericCellValue() + "\t";
+											if (HSSFDateUtil.isCellDateFormatted(cell)) {
+												DataFormatter dataFormatter = new DataFormatter();
+												String cellStringValue = dataFormatter.formatCellValue(cell);
+												rowData += cellStringValue + "\t";
+											} else {
+												rowData += cell.getNumericCellValue() + "\t";
+											}
 											break;
 										case STRING:
-											rowData += cell.getStringCellValue() + "\t";
+											rowData += cell.getStringCellValue().trim() + "\t";
 											break;
 										case BLANK:
 											rowData += "" + "\t";
