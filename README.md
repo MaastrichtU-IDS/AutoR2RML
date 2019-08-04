@@ -10,7 +10,7 @@ AutoR2RML automatically generates R2RML mapping files for the following inputs:
 * Postgres database connection
 * MySQL database connection
 
-The RDBMS metadata are retrieved using JDBC to build the mapping file. The text file contents are queries through JDBC using [Apache Drill](https://drill.apache.org). It uses the first row of each file as header. The mapping file should work out of the box and represent generic rdf representations with a unique id representing the filepath and row-number within the file. 
+The RDBMS metadata are retrieved using JDBC to build the mapping file. The text file contents are queries through JDBC using [Apache Drill](https://drill.apache.org). It uses the first row of each file as header, so **make sure the first row of your file is the columns label**. The mapping file should work out of the box and represent generic rdf representations with a unique id representing the filepath and row-number within the file. 
 
 Please note that for Apache Drill empty string values are treated as NULL and every cell value are trimmed.
 
