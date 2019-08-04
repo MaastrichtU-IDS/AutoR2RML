@@ -71,7 +71,8 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		String[] columns = getColumnNames(filepath);
 		printFirstThreeLines(filepath, ps);
 
-		String table = "dfs.root.`" + filepath + "`";
+		String table = "dfs.root.`" + filepath + "` OFFSET 1";
+		// Use OFFSET to remove the first row which is the column labels
 
 		generateMappingForTable(table, columns, ps, ("Mapping" + count++));
 
