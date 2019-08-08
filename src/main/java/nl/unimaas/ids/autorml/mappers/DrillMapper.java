@@ -30,11 +30,13 @@ import nl.unimaas.ids.util.PrefixPrintWriter;
 
 public class DrillMapper extends AbstractMapper implements MapperInterface {
 	final static List<String> acceptedFileTypes = Arrays.asList(new String[] { "csv", "tsv", "psv","xlsx" });
+	private String columnHeaderString;
 
-	public DrillMapper(String jdbcUrl, String userName, String passWord, String baseUri, String graphUri) throws SQLException, ClassNotFoundException {
+	public DrillMapper(String jdbcUrl, String userName, String passWord, String baseUri, String graphUri, String columnHeaderString) throws SQLException, ClassNotFoundException {
 		super(jdbcUrl, userName, passWord, baseUri, graphUri);
 		Class.forName("org.apache.drill.jdbc.Driver");
 		connection = DriverManager.getConnection(jdbcUrl, userName, passWord);
+		this.columnHeaderString = columnHeaderString; 
 	}
 
 
@@ -71,8 +73,10 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		String[] columns = getColumnNames(filepath);
 		printFirstThreeLines(filepath, ps);
 
-		String table = "dfs.root.`" + filepath + "` OFFSET 1";
-		// Use OFFSET to remove the first row which is the column labels
+		String table = "dfs.root.`" + filepath + "`";
+		// Use OFFSET to remove the first row which is the column labels if no columnHeader param provided
+		if (columnHeaderString == null)
+			table = table + " OFFSET 1";
 
 		generateMappingForTable(table, columns, ps, ("Mapping" + count++));
 
@@ -102,14 +106,14 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		Iterator<Sheet> sheetIterator = wb.sheetIterator();
 
 
-		// TODO skip excel sheets starting with #?
+		// TODO: skip excel sheets starting with #?
 		while (sheetIterator.hasNext()) {
 			StringBuilder data = new StringBuilder();
 			Sheet sheet = sheetIterator.next();
 			String sheetName = sheet.getSheetName();
 
 			if (!sheetName.startsWith("#")) {
-				// TODO write after each line to the file or if x size is reached
+				// TODO: write after each line to the file or if x size is reached
 				File outputFile = new File(xlsxFile + ".sheet_" + sheetName + ".tsv");
 				BufferedWriter bwr = new BufferedWriter(new FileWriter(outputFile));
 				fileSheets.add(outputFile.getAbsolutePath());
@@ -166,14 +170,13 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 						}
 					}
 				}
-
 				bwr.close();
 			}
 		}
 		return fileSheets;
 	}
 
-
+	
 	@SuppressWarnings("resource")
 	private void printFirstThreeLines(String filePath, PrintStream ps) throws SQLException {
 		Statement st = connection.createStatement();
@@ -188,20 +191,26 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		pw.flush();
 	}
 
-
 	private String[] getColumnNames(String filePath) throws SQLException {
-		Statement st = connection.createStatement();
-		String sql = "select * from dfs.root.`" + filePath + "` limit 1";
-
-		ResultSet rs = st.executeQuery(sql);
-
-		String line;
-		if (rs.next())
-			line = rs.getString(1);
-		else
-			throw new InvalidParameterException("File \"" + filePath + "\" seems to be empty" );
-//		AutoR2RML.logger.info(line);
-		return line.substring(2, line.length() - 2).split("\",\"");
+		String [] columnNamesArray = null;
+		if (columnHeaderString != null) {
+			// If columnHeader is provided as param (csv)
+			columnNamesArray = columnHeaderString.split(",");
+		} else {
+			// Otherwise get the 1st row as header
+			Statement st = connection.createStatement();
+			String sql = "select * from dfs.root.`" + filePath + "` limit 1";
+	
+			ResultSet rs = st.executeQuery(sql);
+			String line;
+			if (rs.next())
+				line = rs.getString(1);
+			else
+				throw new InvalidParameterException("File \"" + filePath + "\" seems to be empty" );
+			columnNamesArray = line.substring(2, line.length() - 2).split("\",\"");
+		}
+		// AutoR2RML.logger.info(line);
+		return columnNamesArray;
 	}
 
 	private List<String> getFilesRecursivelyAsList(Connection connection, String path, boolean recursive)

@@ -30,13 +30,16 @@ public class CliOptions {
 	String outputFilePath = null;
 
 	@Option(names = {"-b", "--baseuri"}, description = "Base URI used to generate triples. Default: http://data2services/" )
-	String baseUri = "http://data2services.com/";
+	String baseUri = "https://w3id.org/data2services/";
 
 	@Option(names = {"-g", "--graphuri"}, description = "Graph URI for the generated triples. Default: http://data2services/graph/autor2rml" )
-	String graphUri = "http://data2services/graph/autor2rml";
+	String graphUri = "https://w3id.org/data2services/graph/autor2rml";
 
 	@Option(names = {"-d", "--directory"}, description = "Base directory to scan for structured files")
 	String baseDir;
+	
+	@Option(names = {"-c", "--column-header"}, description = "Comma separated label of the columns for tabular files processing. The entire file will be considered as data. e.g. id,name,col3")
+	String columnHeaderString;
 
 	CliOptions(String[] args) {
 		try {
