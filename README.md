@@ -24,12 +24,17 @@ docker build -t autor2rml .
 
 #### Using Apache Drill for TSV files
 
+AutoR2RML uses by default the first row of the file as column labels to name the generic RDF properties. Uses `--column-header` to provide column labels if the first row is already data.
+
 ```shell
 # Mappings to System.out
 docker run -it --rm --link drill:drill autor2rml -j "jdbc:drill:drillbit=drill:31010" -d /data/pharmgkb_drugs -r
 
 # Mappings to a file
-docker run -it --rm --link drill:drill -v /data:/data autor2rml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -b http://data2services/ -g http://data2services/graph/autor2rml -r
+docker run -it --rm --link drill:drill -v /data:/data autor2rml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.trig -r -d /data/pharmgkb_drugs -b https://w3id.org/data2services/ -g https://w3id.org/data2services/graph/autor2rml
+
+# Provide column header (labels)
+docker run -it --rm --link drill:drill -v /data:/data autor2rml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.trig -r -d /data/pharmgkb_drugs --column-header id,name,genericNames,col4
 ```
 
 #### Using RDBMS
@@ -43,10 +48,10 @@ su postgres
 psql drugcentral < /data/drugcentral.dump.08262018.sql
 
 # Run autor2rml on DB
-docker run -it --rm --link postgres:postgres -v /data:/data autor2rml -j "jdbc:postgresql://postgres:5432/drugcentral" -u postgres -p pwd -o /data/autor2rml/mapping.ttl
+docker run -it --rm --link postgres:postgres -v /data:/data autor2rml -j "jdbc:postgresql://postgres:5432/drugcentral" -u postgres -p pwd -o /data/autor2rml/mapping.trig
 
 ## SQLite
-docker run -it --rm -v /data:/data autor2rml -j "jdbc:sqlite:/data/sqlite/chinook.db" -o /data/sqlite/mapping.ttl
+docker run -it --rm -v /data:/data autor2rml -j "jdbc:sqlite:/data/sqlite/chinook.db" -o /data/sqlite/mapping.trig
 
 ```
 
@@ -75,5 +80,5 @@ docker run --rm -it autor2rml -?
 nl.unimaas.ids.autor2rml.autor2rml
 
 # Program arguments for Drill
--j "jdbc:drill:drillbit=localhost:31010" -o /data/pharmgkb_drugs/mapping.ttl -d /data/pharmgkb_drugs -r
+-j "jdbc:drill:drillbit=localhost:31010" -o /data/pharmgkb_drugs/mapping.trig -d /data/pharmgkb_drugs -r
 ```
