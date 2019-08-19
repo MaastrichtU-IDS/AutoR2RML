@@ -14,4 +14,6 @@ public interface MapperInterface {
 	
 	public String getSqlForColumn(String column, int index);
 
+	public String getTableSparqlPath(String tableName, String baseDir);
+
 }

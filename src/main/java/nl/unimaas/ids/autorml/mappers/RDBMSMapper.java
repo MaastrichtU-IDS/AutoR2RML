@@ -39,7 +39,7 @@ public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 			  table = rs.getString(2) + "." + table; 
 		  }
 		  String[] col = (String[]) columns.toArray(new String[0]);
-		  generateMappingForTable(table, col, out, table);
+		  generateMappingForTable(table, col, out, table, baseDir);
 		}
 		
 	}
@@ -59,5 +59,10 @@ public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 	public String getSqlForColumn(String column, int index) {
 		return column;
 	}
+ 	
+    // Add base dir to table get filename to generate the SPARQL files
+ 	public String getTableSparqlPath(String tableName, String baseDir) {
+ 		return baseDir + "/" + tableName.replaceAll("\\W+", "_");
+ 	}
 
 }

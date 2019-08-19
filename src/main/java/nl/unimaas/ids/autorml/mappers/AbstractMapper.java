@@ -16,7 +16,6 @@ public abstract class AbstractMapper implements MapperInterface {
 	Connection connection;
 	final static String ROW_NUM_NAME = "autor2rml_rownum";	
 	private String baseUri;
-	
 	private String graphUri;
 	
 	public AbstractMapper(String jdbcUrl, String userName, String passWord, String baseUri, String graphUri) {
@@ -30,12 +29,12 @@ public abstract class AbstractMapper implements MapperInterface {
 			connection.close();
 	}
 	
-	void generateMappingForTable(String table, String[] columns, PrintStream ps, String label) throws Exception {
-		generateMappingForTable(table, columns, ps, label, null);
+	void generateMappingForTable(String table, String[] columns, PrintStream ps, String label, String baseDir) throws Exception {
+		generateMappingForTable(table, columns, ps, label, null, baseDir);
 	}
 	
 	@SuppressWarnings("resource")
-	void generateMappingForTable(String table, String[] columns, PrintStream ps, String label, String prefix) throws Exception {
+	void generateMappingForTable(String table, String[] columns, PrintStream ps, String label, String prefix, String baseDir) throws Exception {
 		PrintWriter upper = new PrefixPrintWriter(ps, prefix);
 		PrintWriter lower = new PrefixPrintWriter(ps, prefix);
 
@@ -69,7 +68,7 @@ public abstract class AbstractMapper implements MapperInterface {
 
 		upper.flush();
 		lower.flush();
-		generateSparqlQuery(cleanTableNameForUri(table), columns);
+		generateSparqlQuery(cleanTableNameForUri(table), columns, baseDir);
 	}
 	
 	void generateNamespaces(PrintStream ps) {
@@ -87,11 +86,11 @@ public abstract class AbstractMapper implements MapperInterface {
 	}
 	
 	// Generate template SPARQL query based on input data structure
-	private void generateSparqlQuery(String tableName, String[] columns) throws FileNotFoundException {
+	private void generateSparqlQuery(String tableName, String[] columns, String baseDir) throws FileNotFoundException {
 		// Get file path to create a file by file, only works on AutoR2RML (TODO: support SQL tables)
-		if (!tableName.startsWith("/")) {
-			tableName = "/" + tableName;
-		}
+		// Get file path to create a file by table/file, only tested on AutoR2RML (TODO: test SQL tables support)               
+       tableName = getTableSparqlPath(tableName, baseDir);
+
 		PrintStream ps = new PrintStream(new FileOutputStream(new File(tableName + ".rq")));
 		PrintWriter upper = new PrintWriter(ps);
 		PrintWriter lower = new PrintWriter(ps);

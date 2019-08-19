@@ -78,7 +78,7 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		if (columnHeaderString == null)
 			table = table + " OFFSET 1";
 
-		generateMappingForTable(table, columns, ps, ("Mapping" + count++));
+		generateMappingForTable(table, columns, ps, ("Mapping" + count++), filepath);
 
 		// Generate generic columns name (Column1)
 		for (int i = 0; i < columns.length; i++) {
@@ -86,6 +86,10 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		}
 		//generateMappingForTable(table, columns, ps, ("Mapping" + count++), "# ");
 		return count;
+	}
+	
+	public String getTableSparqlPath(String tableName, String baseDir) {
+		return tableName;
 	}
 
 	/**
