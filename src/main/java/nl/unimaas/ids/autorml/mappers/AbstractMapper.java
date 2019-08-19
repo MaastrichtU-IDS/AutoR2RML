@@ -87,11 +87,10 @@ public abstract class AbstractMapper implements MapperInterface {
 	
 	// Generate template SPARQL query based on input data structure
 	private void generateSparqlQuery(String tableName, String[] columns, String baseDir) throws FileNotFoundException {
-		// Get file path to create a file by file, only works on AutoR2RML (TODO: support SQL tables)
 		// Get file path to create a file by table/file, only tested on AutoR2RML (TODO: test SQL tables support)               
-       tableName = getTableSparqlPath(tableName, baseDir);
-
-		PrintStream ps = new PrintStream(new FileOutputStream(new File(tableName + ".rq")));
+		String tableSparqlPath = getTableSparqlPath(tableName, baseDir)  + ".rq";
+		
+		PrintStream ps = new PrintStream(new FileOutputStream(new File(tableSparqlPath)));
 		PrintWriter upper = new PrintWriter(ps);
 		PrintWriter lower = new PrintWriter(ps);
 		
@@ -116,7 +115,8 @@ public abstract class AbstractMapper implements MapperInterface {
 			if (i == 0) {
 				upper.println("   ?" + columnName + "_uri a owl:Thing ;");
 				upper.println("      dc:identifier ?" + columnName + " ;");
-				lower.println("      ?row d2s:" + columnName + " ?" + columnName + " .");
+				lower.println("      ?row d2s:" + columnName + " ?" + columnName + " ;");
+				lower.println("        a <" + this.baseUri + tableName + "> .");
 				lower.println("      BIND ( iri(concat(\"https://w3id.org/data2services/data/\", md5(?" + columnName + "))) AS ?" + columnName + "_uri )");
 			} else{
 				upper.println("      property ?" + columnName + " ;");
@@ -125,7 +125,6 @@ public abstract class AbstractMapper implements MapperInterface {
 		}
 		upper.println(");");
 		
-		lower.println("      }");
 		lower.println("    }");
 		lower.println("  }");
 		lower.println("}");
