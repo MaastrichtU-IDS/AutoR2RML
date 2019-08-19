@@ -1,5 +1,8 @@
 package nl.unimaas.ids.autorml.mappers;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -66,6 +69,7 @@ public abstract class AbstractMapper implements MapperInterface {
 
 		upper.flush();
 		lower.flush();
+		generateSparqlQuery(cleanTableNameForUri(table), columns);
 	}
 	
 	void generateNamespaces(PrintStream ps) {
@@ -80,6 +84,55 @@ public abstract class AbstractMapper implements MapperInterface {
 		int i2 = tableName.indexOf("`", i1+1);
 		tableName = tableName.substring(i1 + 1, i2);
 		return StringUtils.removeStart(tableName, "/");
+	}
+	
+	// Generate template SPARQL query based on input data structure
+	private void generateSparqlQuery(String tableName, String[] columns) throws FileNotFoundException {
+		// Get file path to create a file by file, only works on AutoR2RML (TODO: support SQL tables)
+		if (!tableName.startsWith("/")) {
+			tableName = "/" + tableName;
+		}
+		PrintStream ps = new PrintStream(new FileOutputStream(new File(tableName + ".rq")));
+		PrintWriter upper = new PrintWriter(ps);
+		PrintWriter lower = new PrintWriter(ps);
+		
+		upper.println("PREFIX d2s: <https://w3id.org/data2services/model/>");
+		upper.println("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>");
+		upper.println("PREFIX owl: <http://www.w3.org/2002/07/owl#>");
+		upper.println("PREFIX dc: <http://purl.org/dc/elements/1.1/>");
+		upper.println("PREFIX dcterms: <http://purl.org/dc/terms/>");
+		upper.println("PREFIX bl: <https://w3id.org/biolink/vocab/>");
+		upper.println("PREFIX w3idvocab: <https://w3id.org/data2services/vocab/>");
+		upper.println("INSERT {");
+		upper.println("  GRAPH <?_outputGraph> {  ");
+		upper.println("    # Attribute the retrieved data to your model properties");
+		
+		lower.println("} WHERE {");
+		lower.println("  SERVICE <?_serviceUrl>  {");
+		lower.println("    GRAPH <?_inputGraph> {");
+		lower.println("      # Generate URI or manipulate the data before inserting it.");
+		
+		for (int i = 0; i < columns.length; i++) {
+			String columnName = getColumnName(columns[i]);
+			if (i == 0) {
+				upper.println("   ?" + columnName + "_uri a owl:Thing ;");
+				upper.println("      dc:identifier ?" + columnName + " ;");
+				lower.println("      ?row d2s:" + columnName + " ?" + columnName + " .");
+				lower.println("      BIND ( iri(concat(\"https://w3id.org/data2services/data/\", md5(?" + columnName + "))) AS ?" + columnName + "_uri )");
+			}
+			upper.println("      property ?" + columnName + " ;");
+			lower.println("      OPTIONAL { ?row d2s:" + columnName + " ?" + columnName + " . }");
+		}
+		upper.println(");");
+		
+		lower.println("      }");
+		lower.println("    }");
+		lower.println("  }");
+		lower.println("}");
+		
+		upper.flush();
+		lower.flush();
+		ps.close();
 	}
 
 }
