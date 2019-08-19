@@ -118,9 +118,10 @@ public abstract class AbstractMapper implements MapperInterface {
 				upper.println("      dc:identifier ?" + columnName + " ;");
 				lower.println("      ?row d2s:" + columnName + " ?" + columnName + " .");
 				lower.println("      BIND ( iri(concat(\"https://w3id.org/data2services/data/\", md5(?" + columnName + "))) AS ?" + columnName + "_uri )");
+			} else{
+				upper.println("      property ?" + columnName + " ;");
+				lower.println("      OPTIONAL { ?row d2s:" + columnName + " ?" + columnName + " . }");
 			}
-			upper.println("      property ?" + columnName + " ;");
-			lower.println("      OPTIONAL { ?row d2s:" + columnName + " ?" + columnName + " . }");
 		}
 		upper.println(");");
 		
