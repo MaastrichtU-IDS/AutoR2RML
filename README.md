@@ -20,11 +20,17 @@ docker build -t autor2rml .
 ```
 ## Run
 
+AutoR2RML will generate files to help you map your relational databases, CSV, TSV to a RDF target data model:
+
+* a R2RML `mapping.trig` file (at the location provided using `-o`) to generate generic RDF based on the data structure
+* a `template SPARQL query` file for each file/table mapped, to help the user start to write the SPARQL mappings required to transform the generic RDF generated to the target data model. e.g. `pharmgkb_drugs.tsv.rq`
+
 ### Docker
 
 #### Using Apache Drill for TSV files
 
-AutoR2RML uses by default the first row of the file as column labels to name the generic RDF properties. Uses `--column-header` to provide column labels if the first row is already data.
+* The file paths provided to AutoR2RML will be used by the Apache Drill container, so make sure you are properly using the same shared volumes (`/data` by default)
+* AutoR2RML uses by default the first row of the file as column labels to name the generic RDF properties. Uses `--column-header` to provide column labels if the first row is data.
 
 ```shell
 # Mappings to System.out
@@ -55,7 +61,7 @@ docker run -it --rm -v /data:/data autor2rml -j "jdbc:sqlite:/data/sqlite/chinoo
 
 ```
 
-### Jdbc URL
+### JDBC URL examples
 
 ```shell
 # For Apache Drill
@@ -74,6 +80,8 @@ jdbc:sqlite:/data/sqlite/GEOmetadb.sqlite
 docker run --rm -it autor2rml -?
 ```
 ### IDE run config
+
+To test AutoR2RML in your favorite IDE.
 
 ```shell
 # Main class
