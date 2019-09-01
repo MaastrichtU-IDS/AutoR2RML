@@ -99,7 +99,7 @@ public abstract class AbstractMapper implements MapperInterface {
 		upper.println("PREFIX owl: <http://www.w3.org/2002/07/owl#>");
 		upper.println("PREFIX dc: <http://purl.org/dc/elements/1.1/>");
 		upper.println("PREFIX dcterms: <http://purl.org/dc/terms/>");
-		upper.println("PREFIX bl: <https://w3id.org/biolink/vocab/>");
+		upper.println("PREFIX biolink: <https://w3id.org/biolink/vocab/>");
 		upper.println("PREFIX w3idvocab: <https://w3id.org/data2services/vocab/>");
 		upper.println("INSERT {");
 		upper.println("  GRAPH <?_outputGraph> {  ");
@@ -108,7 +108,7 @@ public abstract class AbstractMapper implements MapperInterface {
 		lower.println("} WHERE {");
 		lower.println("  SERVICE <?_serviceUrl>  {");
 		lower.println("    GRAPH <?_inputGraph> {");
-		lower.println("      # Generate URI or manipulate the data before inserting it.");
+		lower.println("");
 		
 		for (int i = 0; i < columns.length; i++) {
 			String columnName = getColumnName(columns[i]);
@@ -117,7 +117,10 @@ public abstract class AbstractMapper implements MapperInterface {
 				upper.println("      dc:identifier ?" + columnName + " ;");
 				lower.println("      ?row d2s:" + columnName + " ?" + columnName + " ;");
 				lower.println("        a <" + this.baseUri + tableName + "> .");
+				lower.println("");
+				lower.println("      # Generate URI from ID");
 				lower.println("      BIND ( iri(concat(\"https://w3id.org/data2services/data/\", md5(?" + columnName + "))) AS ?" + columnName + "_uri )");
+				lower.println("");
 			} else{
 				upper.println("      property ?" + columnName + " ;");
 				lower.println("      OPTIONAL { ?row d2s:" + columnName + " ?" + columnName + " . }");
