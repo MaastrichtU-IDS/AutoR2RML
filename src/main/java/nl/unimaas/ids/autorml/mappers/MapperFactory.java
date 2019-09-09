@@ -11,7 +11,7 @@ public class MapperFactory {
 		} else if (jdbcUrl.startsWith("jdbc:sqlite:")) {
 			ret = new SQLiteMapper(jdbcUrl, userName, passWord, baseUri, graphUri);
 		} else if (jdbcUrl.startsWith("jdbc:mysql")) {
-			ret = new MysqlMapper(jdbcUrl, userName, passWord, baseUri, graphUri);
+			ret = new MySQLMapper(jdbcUrl, userName, passWord, baseUri, graphUri);
 		} else {
 			ret = new RDBMSMapper(jdbcUrl, userName, passWord, baseUri, graphUri);
 		}
