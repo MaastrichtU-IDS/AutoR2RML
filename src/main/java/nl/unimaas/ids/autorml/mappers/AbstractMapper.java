@@ -109,12 +109,12 @@ public abstract class AbstractMapper implements MapperInterface {
 		upper.println("PREFIX biolink: <https://w3id.org/biolink/vocab/>");
 		upper.println("PREFIX w3idvocab: <https://w3id.org/data2services/vocab/>");
 		upper.println("INSERT {");
-		upper.println("  GRAPH <?_outputGraph> {  ");
+		upper.println("  GRAPH <?_output> {  ");
 		upper.println("    # Attribute the retrieved data to your model properties");
 		
 		lower.println("} WHERE {");
-		lower.println("  SERVICE <?_serviceUrl>  {");
-		lower.println("    GRAPH <?_inputGraph> {");
+		lower.println("  SERVICE <?_service>  {");
+		lower.println("    GRAPH <?_input> {");
 		lower.println("");
 		
 		for (int i = 0; i < columns.length; i++) {
