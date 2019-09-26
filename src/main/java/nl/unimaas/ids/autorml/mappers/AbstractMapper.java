@@ -101,7 +101,7 @@ public abstract class AbstractMapper implements MapperInterface {
 		// Get file path to create a file by table/file, only tested on AutoR2RML (TODO: test SQL tables support)               
 		String tableSparqlPath = outputDir + "/sparql_template_mappings/" + getTableSparqlPath(tableName, outputDir)  + ".rq";
 		File sparqlQueryFile = new File(tableSparqlPath);
-		sparqlQueryFile.mkdirs();
+		sparqlQueryFile.getParentFile().mkdirs();
 		// TODO: File not found here
 		PrintStream ps = new PrintStream(new FileOutputStream(sparqlQueryFile));
 		PrintWriter upper = new PrintWriter(ps);
