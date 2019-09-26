@@ -42,8 +42,9 @@ public abstract class AbstractMapper implements MapperInterface {
 	
 	@SuppressWarnings("resource")
 	void generateMappingForTable(String table, String[] columns, PrintStream ps, String label, String prefix, String outputDir) throws Exception {
-		PrintWriter upper = new PrefixPrintWriter(ps, prefix);
-		PrintWriter lower = new PrefixPrintWriter(ps, prefix);
+		// TODO: remove PrefixPrintWriter now useless?
+		PrintWriter upper = new PrefixPrintWriter(ps, "");
+		PrintWriter lower = new PrefixPrintWriter(ps, "");
 
 		upper.println("<#" + label + ">");
 		upper.println("rr:logicalTable [ rr:sqlQuery \"\"\"");
@@ -135,7 +136,7 @@ public abstract class AbstractMapper implements MapperInterface {
 				lower.println("      BIND ( iri(concat(\"https://w3id.org/data2services/data/\", md5(?" + columnName + "))) AS ?" + columnName + "_uri )");
 				lower.println("");
 			} else{
-				upper.println("      property ?" + columnName + " ;");
+				upper.println("      rdfs:label ?" + columnName + " ;");
 				lower.println("      OPTIONAL { ?row d2s:" + columnName + " ?" + columnName + " . }");
 			}
 		}
