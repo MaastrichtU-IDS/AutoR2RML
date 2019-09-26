@@ -16,7 +16,7 @@ RUN mvn package -Dmaven.test.skip=true && \
     mkdir $APP_DIR && \
     mv target/autor2rml-0.0.1-SNAPSHOT-jar-with-dependencies.jar $APP_DIR/autor2rml.jar && \
     rm -rf $TMP_DIR
-    
+
 WORKDIR $APP_DIR
 
-ENTRYPOINT ["java","-jar","autor2rml.jar"]
+ENTRYPOINT ["java","-jar","/app/autor2rml.jar"]
