@@ -6,7 +6,7 @@ public interface MapperInterface {
 	
 	public void close() throws Exception;
 
-	public void generateMapping(PrintStream out, boolean recursive, String baseDir) throws Exception;
+	public void generateMapping(PrintStream out, boolean recursive, String baseDir, String outputDir) throws Exception;
 	
 	public String getColumnName(String column);
 	

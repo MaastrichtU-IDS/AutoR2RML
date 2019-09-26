@@ -19,12 +19,15 @@ public class AutoR2RML {
 		CliOptions cli = new CliOptions(args);
 
 		MapperInterface mapper = MapperFactory.getMapper(cli.jdbcurl, cli.userName, cli.passWord, cli.baseUri, cli.graphUri, cli.columnHeaderString);
-
+		
+		String outputDir = cli.baseDir;
 		PrintStream ps = System.out;
-		if (cli.outputFilePath != null)
+		if (cli.outputFilePath != null){
+			outputDir = cli.outputFilePath.substring(0, cli.outputFilePath.lastIndexOf("/"));
 			ps = new PrintStream(new FileOutputStream(new File(cli.outputFilePath)));
+		}
 
-		mapper.generateMapping(ps, cli.recursive, cli.baseDir);
+		mapper.generateMapping(ps, cli.recursive, cli.baseDir, outputDir);
 
 		mapper.close();
 	}

@@ -36,12 +36,12 @@ public abstract class AbstractMapper implements MapperInterface {
 			connection.close();
 	}
 	
-	void generateMappingForTable(String table, String[] columns, PrintStream ps, String label, String baseDir) throws Exception {
-		generateMappingForTable(table, columns, ps, label, null, baseDir);
+	void generateMappingForTable(String table, String[] columns, PrintStream ps, String label, String outputDir) throws Exception {
+		generateMappingForTable(table, columns, ps, label, null, outputDir);
 	}
 	
 	@SuppressWarnings("resource")
-	void generateMappingForTable(String table, String[] columns, PrintStream ps, String label, String prefix, String baseDir) throws Exception {
+	void generateMappingForTable(String table, String[] columns, PrintStream ps, String label, String prefix, String outputDir) throws Exception {
 		PrintWriter upper = new PrefixPrintWriter(ps, prefix);
 		PrintWriter lower = new PrefixPrintWriter(ps, prefix);
 
@@ -75,7 +75,7 @@ public abstract class AbstractMapper implements MapperInterface {
 
 		upper.flush();
 		lower.flush();
-		generateSparqlQuery(cleanTableNameForUri(table), columns, baseDir);
+		generateSparqlQuery(cleanTableNameForUri(table), columns, outputDir);
 	}
 	
 	void generateNamespaces(PrintStream ps) {
@@ -97,12 +97,13 @@ public abstract class AbstractMapper implements MapperInterface {
 	}
 	
 	// Generate template SPARQL query based on input data structure
-	private void generateSparqlQuery(String tableName, String[] columns, String baseDir) throws FileNotFoundException {
+	private void generateSparqlQuery(String tableName, String[] columns, String outputDir) throws FileNotFoundException {
 		// Get file path to create a file by table/file, only tested on AutoR2RML (TODO: test SQL tables support)               
-		String tableSparqlPath = getTableSparqlPath(tableName, baseDir)  + ".rq";
-		
+		String tableSparqlPath = outputDir + "/sparql_template_mappings/" + getTableSparqlPath(tableName, outputDir)  + ".rq";
+		File sparqlQueryFile = new File(tableSparqlPath);
+		sparqlQueryFile.mkdirs();
 		// TODO: File not found here
-		PrintStream ps = new PrintStream(new FileOutputStream(new File(tableSparqlPath)));
+		PrintStream ps = new PrintStream(new FileOutputStream(sparqlQueryFile));
 		PrintWriter upper = new PrintWriter(ps);
 		PrintWriter lower = new PrintWriter(ps);
 		

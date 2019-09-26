@@ -40,7 +40,7 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 	}
 
 
-	public void generateMapping(PrintStream ps, boolean recursive, String path) throws Exception {
+	public void generateMapping(PrintStream ps, boolean recursive, String path, String outputDir) throws Exception {
 
 		if (path.endsWith("/"))
 			path = path.substring(0, path.length() - 1);
@@ -60,16 +60,16 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 					ArrayList<String> fileSheets = xlsxToTSV(new File(filepath));
 					for (String fileSheet : fileSheets) {
 						AutoR2RML.logger.debug("Analyzing excel sheet: " + fileSheet);
-						count = generateMappingForFile(ps, count, fileSheet);
+						count = generateMappingForFile(ps, count, fileSheet, outputDir);
 					}
 				} else {
-					count = generateMappingForFile(ps, count, filepath);
+					count = generateMappingForFile(ps, count, filepath, outputDir);
 				}
 			}
 		}
 	}
 
-	private int generateMappingForFile(PrintStream ps, int count, String filepath) throws Exception {
+	private int generateMappingForFile(PrintStream ps, int count, String filepath, String outputDir) throws Exception {
 		String[] columns = getColumnNames(filepath);
 		printFirstThreeLines(filepath, ps);
 
@@ -78,7 +78,7 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		if (columnHeaderString == null)
 			table = table + " OFFSET 1";
 
-		generateMappingForTable(table, columns, ps, ("Mapping" + count++), filepath);
+		generateMappingForTable(table, columns, ps, ("Mapping" + count++), filepath, outputDir);
 
 		// Generate generic columns name (Column1)
 		for (int i = 0; i < columns.length; i++) {

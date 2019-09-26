@@ -20,7 +20,7 @@ public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 
 
 	@Override
-	public void generateMapping(PrintStream out, boolean recursive, String baseDir) throws Exception {
+	public void generateMapping(PrintStream out, boolean recursive, String baseDir, String outputDir) throws Exception {
 		DatabaseMetaData md = connection.getMetaData();
 		ResultSet rs = md.getTables(null, null, "%", new String[] { "TABLE" });
 		
@@ -39,7 +39,7 @@ public class RDBMSMapper extends AbstractMapper implements MapperInterface {
 			  table = rs.getString(2) + "." + table; 
 		  }
 		  String[] col = (String[]) columns.toArray(new String[0]);
-		  generateMappingForTable(table, col, out, table, baseDir);
+		  generateMappingForTable(table, col, out, table, outputDir);
 		}
 		
 	}
