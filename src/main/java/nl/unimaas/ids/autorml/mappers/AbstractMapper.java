@@ -99,7 +99,7 @@ public abstract class AbstractMapper implements MapperInterface {
 	// Generate template SPARQL query based on input data structure
 	private void generateSparqlQuery(String tableName, String[] columns, String outputDir) throws FileNotFoundException {
 		// Get file path to create a file by table/file, only tested on AutoR2RML (TODO: test SQL tables support)               
-		String tableSparqlPath = outputDir + "/sparql_template_mappings/" + getTableSparqlPath(tableName, outputDir)  + ".rq";
+		String tableSparqlPath = outputDir + "/sparql_mapping_templates/" + getTableSparqlPath(tableName, outputDir)  + ".rq";
 		File sparqlQueryFile = new File(tableSparqlPath);
 		sparqlQueryFile.getParentFile().mkdirs();
 		// TODO: File not found here
@@ -139,7 +139,7 @@ public abstract class AbstractMapper implements MapperInterface {
 				lower.println("      OPTIONAL { ?row d2s:" + columnName + " ?" + columnName + " . }");
 			}
 		}
-		upper.println(");");
+		upper.println("  }");
 		
 		lower.println("    }");
 		lower.println("  }");
