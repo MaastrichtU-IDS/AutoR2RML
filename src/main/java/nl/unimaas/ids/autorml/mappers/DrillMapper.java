@@ -88,9 +88,10 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		return count;
 	}
 	
-	// For drill baseDir is the filepath
+	// For drill tableName is the filepath
+	// Warning: might create conflict if same name file with different structure in different subdir
 	public String getTableSparqlPath(String tableName, String baseDir) {
-		return baseDir;
+		return tableName;
 	}
 
 	/**

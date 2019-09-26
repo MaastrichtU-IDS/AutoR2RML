@@ -89,6 +89,10 @@ public abstract class AbstractMapper implements MapperInterface {
 		int i1 = tableName.indexOf("`");
 		int i2 = tableName.indexOf("`", i1+1);
 		tableName = tableName.substring(i1 + 1, i2);
+		if (StringUtils.startsWith(tableName, "/")){
+			// Remove full path from Drill
+			tableName = tableName.substring(tableName.lastIndexOf("/") + 1);
+		}
 		return StringUtils.removeStart(tableName, "/");
 	}
 	
@@ -97,6 +101,7 @@ public abstract class AbstractMapper implements MapperInterface {
 		// Get file path to create a file by table/file, only tested on AutoR2RML (TODO: test SQL tables support)               
 		String tableSparqlPath = getTableSparqlPath(tableName, baseDir)  + ".rq";
 		
+		// TODO: File not found here
 		PrintStream ps = new PrintStream(new FileOutputStream(new File(tableSparqlPath)));
 		PrintWriter upper = new PrintWriter(ps);
 		PrintWriter lower = new PrintWriter(ps);
