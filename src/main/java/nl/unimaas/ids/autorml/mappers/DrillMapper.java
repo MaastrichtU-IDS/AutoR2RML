@@ -84,12 +84,11 @@ public class DrillMapper extends AbstractMapper implements MapperInterface {
 		for (int i = 0; i < columns.length; i++) {
 			columns[i] = "Column" + (i + 1);
 		}
-		//generateMappingForTable(table, columns, ps, ("Mapping" + count++), "# ");
 		return count;
 	}
 	
-	// For drill tableName is the filepath
-	// Warning: might create conflict if same name file with different structure in different subdir
+	// For drill only tableName required filepath (we don't use full path to avoid changing folder names)
+	// TODO: might create conflict if same name file with different structure in different subdir
 	public String getTableSparqlPath(String tableName, String baseDir) {
 		return tableName;
 	}
