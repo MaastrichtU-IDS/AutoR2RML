@@ -7,10 +7,8 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
-
 import org.apache.commons.lang3.StringUtils;
 
-import nl.unimaas.ids.util.PrefixPrintWriter;
 
 public abstract class AbstractMapper implements MapperInterface {
 	Connection connection;
@@ -40,11 +38,10 @@ public abstract class AbstractMapper implements MapperInterface {
 		generateMappingForTable(table, columns, ps, label, null, outputDir);
 	}
 	
-	@SuppressWarnings("resource")
+	// Generate the R2RML mappings for a table/file
 	void generateMappingForTable(String table, String[] columns, PrintStream ps, String label, String prefix, String outputDir) throws Exception {
-		// TODO: remove PrefixPrintWriter now useless?
-		PrintWriter upper = new PrefixPrintWriter(ps, "");
-		PrintWriter lower = new PrefixPrintWriter(ps, "");
+		PrintWriter upper = new PrintWriter(ps);
+		PrintWriter lower = new PrintWriter(ps);
 
 		upper.println("<#" + label + ">");
 		upper.println("rr:logicalTable [ rr:sqlQuery \"\"\"");
