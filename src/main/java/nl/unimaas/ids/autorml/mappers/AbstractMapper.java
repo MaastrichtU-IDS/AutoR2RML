@@ -117,7 +117,7 @@ public abstract class AbstractMapper implements MapperInterface {
 		upper.println("    # Attribute the retrieved data to your model properties");
 		
 		lower.println("} WHERE {");
-		lower.println("  SERVICE <?_service>  {");
+		lower.println("  # SERVICE <?_service>  {  # Don't work on Virtuoso at the moment");
 		lower.println("    GRAPH <?_input> {");
 		lower.println("");
 		
@@ -133,14 +133,18 @@ public abstract class AbstractMapper implements MapperInterface {
 				lower.println("      BIND ( iri(concat(\"https://w3id.org/data2services/data/\", md5(?" + columnName + "))) AS ?" + columnName + "_uri )");
 				lower.println("");
 			} else{
-				upper.println("      rdfs:label ?" + columnName + " ;");
+				if (i == columns.length - 1) {
+					upper.println("      rdfs:label ?" + columnName + " .");
+				} else {
+					upper.println("      rdfs:label ?" + columnName + " ;");
+				}
 				lower.println("      OPTIONAL { ?row d2s:" + columnName + " ?" + columnName + " . }");
 			}
 		}
 		upper.println("  }");
 		
 		lower.println("    }");
-		lower.println("  }");
+		lower.println("  # }");
 		lower.println("}");
 		
 		upper.flush();
