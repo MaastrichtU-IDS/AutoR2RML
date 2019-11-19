@@ -1,6 +1,8 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 # AutoR2RML
+See the [Data2Services documentation](http://d2s.semanticscience.org/) to run d2s-sparql-operations as part of workflows to generate RDF knowledge graph from structured data.
+
 AutoR2RML automatically generates R2RML mapping files for the following inputs:
 
 * Comma-separated files (.csv)
