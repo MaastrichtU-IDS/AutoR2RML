@@ -79,7 +79,7 @@ jdbc:sqlite:/data/sqlite/GEOmetadb.sqlite
 ### Options
 
 ```shell
-docker run --rm -it autor2rml -?
+docker run --rm -it autor2rml --help
 ```
 ### IDE run config
 
