@@ -105,13 +105,13 @@ public abstract class AbstractMapper implements MapperInterface {
 		PrintWriter upper = new PrintWriter(ps);
 		PrintWriter lower = new PrintWriter(ps);
 		
-		upper.println("PREFIX d2s: <https://w3id.org/data2services/model/>");
+		upper.println("PREFIX d2s: <https://w3id.org/d2s/model/>");
 		upper.println("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>");
 		upper.println("PREFIX owl: <http://www.w3.org/2002/07/owl#>");
 		upper.println("PREFIX dc: <http://purl.org/dc/elements/1.1/>");
 		upper.println("PREFIX dcterms: <http://purl.org/dc/terms/>");
 		upper.println("PREFIX biolink: <https://w3id.org/biolink/vocab/>");
-		upper.println("PREFIX w3idvocab: <https://w3id.org/data2services/vocab/>");
+		upper.println("PREFIX w3idvocab: <https://w3id.org/d2s/vocab/>");
 		upper.println("INSERT {");
 		upper.println("  GRAPH <?_output> {  ");
 		upper.println("    # Attribute the retrieved data to your model properties");
@@ -130,7 +130,7 @@ public abstract class AbstractMapper implements MapperInterface {
 				lower.println("        a <" + this.baseUri + tableName + "> .");
 				lower.println("");
 				lower.println("      # Generate URI from ID");
-				lower.println("      BIND ( iri(concat(\"https://w3id.org/data2services/data/\", md5(?" + columnName + "))) AS ?" + columnName + "_uri )");
+				lower.println("      BIND ( iri(concat(\"https://w3id.org/d2s/data/\", md5(?" + columnName + "))) AS ?" + columnName + "_uri )");
 				lower.println("");
 			} else{
 				if (i == columns.length - 1) {

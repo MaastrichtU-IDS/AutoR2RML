@@ -39,7 +39,7 @@ AutoR2RML will generate files to help you map your relational databases, CSV, TS
 docker run -it --rm --link drill:drill autor2rml -j "jdbc:drill:drillbit=drill:31010" -d /data/pharmgkb_drugs -r
 
 # Mappings to a file
-docker run -it --rm --link drill:drill -v /data:/data autor2rml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.trig -r -d /data/pharmgkb_drugs -b https://w3id.org/data2services/ -g https://w3id.org/data2services/graph/autor2rml
+docker run -it --rm --link drill:drill -v /data:/data autor2rml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.trig -r -d /data/pharmgkb_drugs -b https://w3id.org/d2s/ -g https://w3id.org/d2s/graph/autor2rml
 
 # Provide column header (labels)
 docker run -it --rm --link drill:drill -v /data:/data autor2rml -j "jdbc:drill:drillbit=drill:31010" -o /data/pharmgkb_drugs/mapping.trig -r -d /data/pharmgkb_drugs --column-header id,name,genericNames,col4
