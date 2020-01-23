@@ -110,7 +110,7 @@ public abstract class AbstractMapper implements MapperInterface {
 		upper.println("PREFIX owl: <http://www.w3.org/2002/07/owl#>");
 		upper.println("PREFIX dc: <http://purl.org/dc/elements/1.1/>");
 		upper.println("PREFIX dcterms: <http://purl.org/dc/terms/>");
-		upper.println("PREFIX biolink: <https://w3id.org/biolink/vocab/>");
+		upper.println("PREFIX bl: <https://w3id.org/biolink/vocab/>");
 		upper.println("PREFIX w3idvocab: <https://w3id.org/d2s/vocab/>");
 		upper.println("INSERT {");
 		upper.println("  GRAPH <?_output> {  ");
