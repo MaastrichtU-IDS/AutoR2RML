@@ -31,7 +31,7 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.2.4</version><!--$NO-MVN-MAN-VER$-->
+			<version>42.2.25</version><!--$NO-MVN-MAN-VER$-->
 		</dependency>
 		<dependency>
 			<groupId>org.xerial</groupId>
